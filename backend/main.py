@@ -12,7 +12,7 @@ from feature_extractor import get_url_features
 
 # --- CONFIGURATION ---
 app = FastAPI(title="Phish-Shield AI Engine")
-BASE_DIR = r"C:\Users\nagav\Desktop\phish-shield-ai"
+BASE_DIR = r"C:\Users\nagav\Desktop\phishing project"
 MODEL_DIR = os.path.join(BASE_DIR, "models")
 WHITELIST_PATH = os.path.join(BASE_DIR, "backend", "whitelist.txt")
 
