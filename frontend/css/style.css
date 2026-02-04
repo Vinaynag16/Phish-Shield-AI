@@ -1,0 +1,728 @@
+:root {
+    --bg-color: #0f172a;
+    --card-bg: #1e293b;
+    --text-primary: #f8fafc;
+    --accent-blue: #38bdf8;
+    --safe-green: #22c55e;
+    --danger-red: #ef4444;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #050505; /* Your dark theme */
+    color: white;
+    font-family: 'Segoe UI', sans-serif;
+    min-height: 100vh;      /* Force body to be full screen height */
+    display: flex;          /* Start flex layout */
+    flex-direction: column;
+}
+.container {
+    width: 100%;
+    max-width: 550px;       /* Keeps the box from getting too wide */
+    text-align: center;
+}
+
+.main-wrapper {
+    flex: 1;                /* Makes this div fill all space below the navbar */
+    display: flex;
+    justify-content: center; /* Centers the scanner card horizontally */
+    align-items: center;     /* Centers the scanner card vertically */
+    padding: 20px;
+    width: 100%;
+}
+
+.scanner-box {
+    background: #111114;
+    padding: 30px;
+    border-radius: 16px;
+    border: 1px solid #334155;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+/* This forces the Navbar to be a horizontal bar at the top */
+.navbar {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: row; /* Forces horizontal */
+    justify-content: space-between;
+    padding: 15px 5%;
+    background: #0a0a0c;
+    border-bottom: 2px solid #00ff88;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.container {
+    width: 100%;
+    max-width: 600px;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+h1 {
+    font-size: 2.5rem;
+    letter-spacing: -1px;
+    margin-bottom: 5px;
+}
+
+.ai-tag {
+    background: linear-gradient(90deg, #38bdf8, #818cf8);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: bold;
+}
+
+/* Tabs Styling */
+.tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.tab-btn {
+    flex: 1;
+    background: var(--card-bg);
+    border: 1px solid #334155;
+    color: var(--text-primary);
+    padding: 12px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+
+.tab-btn.active {
+    border-color: var(--accent-blue);
+    background: rgba(56, 189, 248, 0.1);
+}
+
+/* Input Styles */
+.scanner-box {
+    background: var(--card-bg);
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+    border: 1px solid #334155;
+}
+
+input, textarea {
+    width: 100%;
+    background: #0f172a;
+    border: 1px solid #334155;
+    color: white;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+    font-size: 1rem;
+}
+
+textarea {
+    height: 150px;
+    resize: none;
+}
+
+.scan-btn {
+    width: 100%;
+    background: var(--accent-blue);
+    color: #0f172a;
+    font-weight: bold;
+    padding: 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: 0.3s;
+}
+
+.scan-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
+}
+
+/* Result Box */
+.result-box {
+    margin-top: 25px;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    animation: slideUp 0.4s ease-out;
+}
+
+.hidden { display: none; }
+
+/* Ensure these colors are distinct and bright */
+.result-box.safe-mode {
+    border: 2px solid #22c55e !important;
+    background: rgba(34, 197, 94, 0.1) !important;
+    color: #22c55e !important;
+}
+
+.result-box.danger-mode {
+    border: 2px solid #ef4444 !important;
+    background: rgba(239, 68, 68, 0.1) !important;
+    color: #ef4444 !important;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.result-box {
+    /* ... your existing code ... */
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* The Spinner Shape */
+.loader {
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 10px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Helper class to hide/show */
+.hidden {
+    display: none !important;
+}
+
+/* Navigation Styling */
+.navbar {
+    display: flex;
+    justify-content: space-between; /* Puts Logo on Left, Links on Right */
+    align-items: center;
+    padding: 15px 5%;
+    background: rgba(10, 10, 12, 0.95); /* Slight transparency */
+    backdrop-filter: blur(10px); /* Modern glass effect */
+    border-bottom: 2px solid #00ff88;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.4rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: #fff;
+    cursor: pointer;
+}
+
+.logo-icon {
+    color: #00ff88;
+    filter: drop-shadow(0 0 8px #00ff88);
+    font-size: 1.8rem;
+}
+
+.shield-text { color: #00ff88; }
+
+.ai-badge {
+    background: #00ff88;
+    color: #000;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    vertical-align: middle;
+}
+
+.logo span { color: #00ff88; } /* Neon Green */
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 25px;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #888;
+    transition: 0.3s;
+}
+
+.nav-links a:hover, .nav-links a.active {
+    color: #00ff88;
+}
+
+/* Hero Section */
+.hero {
+    padding: 100px 10%;
+    text-align: center;
+    background: radial-gradient(circle at center, #111 0%, #000 100%);
+}
+
+.text-gradient {
+    background: linear-gradient(90deg, #00ff88, #00bdff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color : transparent;
+}
+
+/* Stats Cards */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    padding: 50px 10%;
+}
+
+.stat-card {
+    background: #111;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    border: 1px solid #222;
+}
+
+.stat-card i { font-size: 2rem; color: #00ff88; margin-bottom: 15px; }
+
+/*for the page content below the navbar */
+body {
+    margin: 0;
+    padding: 0;
+}
+
+/* Ensureing that main container doesn't touch the navbar */
+.container, .hero {
+    margin-top: 20px;
+}
+
+.news-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px 5%;
+}
+
+.news-card {
+    background: #16161a;
+    border-left: 4px solid #00ff88;
+    padding: 20px;
+    border-radius: 8px;
+    transition: transform 0.3s;
+}
+
+.news-card:hover {
+    transform: translateY(-5px);
+    background: #1c1c22;
+}
+
+.news-card h4 { color: #00ff88; margin-bottom: 10px; }
+.news-card p { font-size: 0.9rem; color: #ccc; line-height: 1.4; }
+.news-card .date { font-size: 0.7rem; color: #555; text-transform: uppercase; }
+
+.news-link {
+    color: #00ff88;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: bold;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+.news-link:hover {
+    text-decoration: underline;
+}
+
+.retry-btn {
+    background: #00ff88;
+    color: #000;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.docs-container {
+    display: flex;
+    padding: 40px 10%;
+    gap: 50px;
+}
+
+.docs-sidebar {
+    flex: 1;
+    border-right: 1px solid #222;
+}
+
+.docs-sidebar ul { list-style: none; position: sticky; top: 100px; }
+.docs-sidebar li { margin-bottom: 20px; }
+.docs-sidebar a { color: #888; text-decoration: none; transition: 0.3s; }
+.docs-sidebar a:hover { color: #00ff88; }
+
+.docs-content { flex: 3; line-height: 1.8; color: #ccc; }
+.docs-content h2 { color: #00ff88; margin-bottom: 20px; }
+
+.features-section {
+    padding: 60px 10%;
+    text-align: center;
+}
+
+.section-header h2 {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.feature-card {
+    background: linear-gradient(145deg, #111114, #0a0a0c);
+    padding: 40px;
+    border-radius: 20px;
+    border: 1px solid #1f1f23;
+    transition: 0.4s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    border-color: #00ff88;
+    box-shadow: 0 10px 30px rgba(0, 255, 136, 0.1);
+}
+
+.icon-box {
+    font-size: 2.5rem;
+    color: #00ff88;
+    margin-bottom: 20px;
+}
+
+.feature-card h3 {
+    margin-bottom: 15px;
+    color: #fff;
+}
+
+.feature-card p {
+    color: #888;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.features-detail {
+    padding: 60px 10%;
+    text-align: center;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-top: 50px;
+}
+
+.detail-card {
+    background: #111;
+    padding: 40px;
+    border-radius: 15px;
+    border: 1px solid #222;
+    text-align: left;
+}
+
+.detail-card i {
+    font-size: 3rem;
+    color: #00ff88;
+    margin-bottom: 20px;
+}
+
+.accuracy-bar {
+    background: #222;
+    border-radius: 10px;
+    margin-top: 20px;
+    height: 25px;
+    overflow: hidden;
+}
+
+.accuracy-bar .fill {
+    background: #00ff88;
+    height: 100%;
+    color: #000;
+    font-weight: bold;
+    font-size: 0.8rem;
+    padding-left: 10px;
+    line-height: 25px;
+}
+
+/* Layout Resets */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {margin: 0;display: flex; flex-direction: column;min-height: 100vh;background-color: #050505; color: white; font-family: sans-serif; }
+
+/* NAVBAR AT TOP */
+.navbar {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 5%;
+    background: #0a0a0c;
+    border-bottom: 1px solid #1f1f23;
+    z-index: 1000;
+}
+
+/* 2. Center the Scanner in the middle of the screen */
+.center-container {
+    display: flex;
+    justify-content: center; /* Centers horizontally */
+    align-items: center;     /* Centers vertically */
+    min-height: 100vh;       /* Makes the container full screen height */
+    width: 100%;
+}
+
+/* 3. Ensure your card doesn't have weird margins pushing it away */
+.analyzer-card {
+    margin: 0 auto; 
+}
+
+.logo { font-size: 1.5rem; font-weight: bold; }
+.logo span { color: #00bdff; }
+
+.nav-links { display: flex; list-style: none; gap: 20px; }
+.nav-links a { text-decoration: none; color: #888; }
+.nav-links a.active { color: #00ff88; font-weight: bold; }
+
+/* CENTERED ANALYZER BOX */
+.main-content {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.analyzer-card {
+    background: #111114;
+    padding: 30px;
+    border-radius: 15px;
+    border: 1px solid #222;
+    text-align: center;
+    width: 100%;
+    max-width: 500px;
+    border: 1px solid #222;
+}
+
+
+
+/* Tab Switching */
+.tab-system { display: flex; gap: 10px; margin-bottom: 20px; }
+.tab-btn { flex: 1; padding: 10px; background: #1a1a1e; border: 1px solid #333; color: white; cursor: pointer; border-radius: 5px; }
+.tab-btn.active { border-color: #00bdff; background: #112; }
+
+.mode-section { display: none; }
+.mode-section.active { display: block; }
+
+/* Input Elements */
+input, textarea {
+    width: 100%;
+    padding: 12px;
+    background: #0a0a0c;
+    border: 1px solid #333;
+    color: white;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+textarea { height: 100px; resize: none; }
+
+.action-btn {
+    width: 100%;
+    padding: 12px;
+    background: #00bdff;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.analyzing-text {
+    animation: pulse 1s infinite;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    color: #3498db;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Optional: Make the results look nice in the table */
+.safe { color: #2ecc71; font-weight: bold; }
+.phishing { color: #e74c3c; font-weight: bold; }
+
+#history-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+#history-table th, #history-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+td.safe {
+    color: #2ecc71;
+    font-weight: bold;
+}
+
+td.phishing {
+    color: #e74c3c;
+    font-weight: bold;
+}
+
+.copy-btn {
+    background: #34495e;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.copy-btn:hover {
+    background: #2c3e50;
+    transform: translateY(-2px);
+}
+
+.copy-btn i {
+    font-size: 0.9em;
+}
+
+#confidence-bar {
+    width: 0%;
+    height: 10px;
+    background: linear-gradient(90deg, #3498db, #2ecc71);
+    border-radius: 5px;
+    margin-top: 10px;
+    transition: width 1.5s ease-in-out; /* The animation */
+}
+.danger-mode #confidence-bar {
+    background: linear-gradient(90deg, #f1c40f, #e74c3c);
+}
+
+#news-feed {
+    display: grid;
+    gap: 15px;
+}
+
+.news-card {
+    background: #111;
+    border-left: 4px solid #00ffcc; /* Cyber Green */
+    padding: 15px;
+    border-radius: 4px;
+    transition: 0.3s;
+}
+
+.news-card:hover {
+    background: #1a1a1a;
+    transform: translateX(5px);
+}
+
+.news-badge {
+    display: inline-block;
+    background: #ff4d4d; /* Alert Red */
+    color: white;
+    font-size: 10px;
+    padding: 2px 6px;
+    font-weight: bold;
+    border-radius: 2px;
+    margin-bottom: 8px;
+}
+
+.news-link {
+    color: #00ffcc;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 0.85rem;
+}
+
+.news-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.news-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid #333;
+    padding: 20px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.news-card:hover {
+    border-color: #00ffcc;
+    transform: translateY(-5px);
+    background: rgba(0, 255, 204, 0.02);
+}
+
+.news-badge {
+    color: #ff4d4d;
+    font-size: 0.7rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+}
+
+.news-card h4 {
+    margin: 10px 0;
+    color: #fff;
+    font-size: 1.1rem;
+}
+
+.news-card p {
+    font-size: 0.9rem;
+    color: #aaa;
+    line-height: 1.5;
+}
+
+.news-link {
+    display: inline-block;
+    margin-top: 15px;
+    color: #00ffcc;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 0.85rem;
+}

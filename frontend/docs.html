@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PhishShield AI | Documentation</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <li><a href="features.html">Features</a></li>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo"><i class="fas fa-user-shield"></i> PHISH-SHIELD</div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="scanner.html">Scanner</a></li>
+            <li><a href="docs.html" class="active">Docs</a></li>
+        </ul>
+    </nav>
+
+    <div class="docs-container">
+        <aside class="docs-sidebar">
+            <ul>
+                <li><a href="#overview">Project Overview</a></li>
+                <li><a href="#architecture">Architecture</a></li>
+                <li><a href="#machine-learning">AI Model Logic</a></li>
+            </ul>
+        </aside>
+
+        <main class="docs-content">
+            <section id="overview">
+                <h2>Project Overview</h2>
+                <p>PhishShield AI is a proactive defense system designed to identify social engineering threats in real-time using Machine Learning.</p>
+            </section>
+
+            <section id="architecture">
+                <h2>System Architecture</h2>
+                <p>The system utilizes a <b>FastAPI</b> backend to bridge the gap between our <b>Scikit-learn</b> models and the <b>Frontend</b> interface.</p>
+                
+            </section>
+
+            <section id="machine-learning">
+                <h2>Machine Learning Logic</h2>
+                <p>We use a <b>Random Forest Classifier</b> for URL analysis, achieving high accuracy by evaluating features like domain length, special characters, and HTTPS status.</p>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

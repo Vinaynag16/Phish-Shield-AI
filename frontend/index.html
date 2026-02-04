@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhishShield AI | Home</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">
+    <i class="fas fa-user-shield logo-icon"></i>
+    <span>PHISH<span class="shield-text">-SHIELD</span> <span class="ai-badge">AI</span></span>
+</div>
+        <ul class="nav-links">
+            <li><a href="index.html" class="active">Home</a></li>
+            <li><a href="scanner.html">Scanner</a></li>
+            <li><a href="features.html">Features</a></li>
+            <li><a href="docs.html">Docs</a></li>
+        </ul>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-content">
+            <h1>Stay Ahead of <span class="text-gradient">Cyber Threats</span></h1>
+            <p>Our AI-powered engine analyzes links and messages in real-time to keep you safe from phishing attacks.</p>
+            <div class="hero-btns">
+                <a href="scanner.html" class="btn-primary">Launch Scanner</a>
+                <a href="#about" class="btn-secondary">Learn More</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="stats-grid">
+        <div class="stat-card">
+            <i class="fas fa-shield-alt"></i>
+            <h3 id="total-scanned">15,402</h3>
+            <p>Links Analyzed</p>
+        </div>
+        <div class="stat-card">
+            <i class="fas fa-bug"></i>
+            <h3 id="threats-detected">3,120</h3>
+            <p>Threats Blocked</p>
+        </div>
+        <div class="stat-card">
+            <i class="fas fa-bolt"></i>
+            <h3>97.4%</h3>
+            <p>Detection Accuracy</p>
+        </div>
+    </section>
+<section class="news-container">
+    <div class="section-header">
+        <h2><i class="fas fa-rss"></i> Cyber Threat Intel</h2>
+        <p>Real-time updates on phishing attacks and global hacking incidents.</p>
+    </div>
+    
+    <div id="news-feed" class="news-grid">
+        <div class="news-loading">Fetching latest threat intel...</div>
+    </div>
+</section>
+<section id="features" class="features-section">
+    <div class="section-header">
+        <h2>Advanced <span class="text-gradient">Detection Capabilities</span></h2>
+        <p>PhishShield AI uses multi-layered analysis to verify every link.</p>
+    </div>
+
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="icon-box"><i class="fas fa-microchip"></i></div>
+            <h3>Random Forest ML</h3>
+            <p>Our model processes 30+ URL features to identify patterns common in phishing kits.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="icon-box"><i class="fas fa-search-dollar"></i></div>
+            <h3>TF-IDF Analysis</h3>
+            <p>We analyze the "textual DNA" of messages to catch social engineering keywords.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="icon-box"><i class="fas fa-network-wired"></i></div>
+            <h3>Real-time API</h3>
+            <p>Instant verification via our FastAPI backend with sub-second latency.</p>
+        </div>
+    </div>
+</section>
+<div id="history-section" class="hidden" style="margin-top: 20px; padding: 15px; border-top: 1px solid #ccc;">
+    <h3>📋 Recent Scan History</h3>
+    <table id="history-table" style="width: 100%; text-align: left; border-collapse: collapse;">
+        <thead>
+            <tr style="border-bottom: 2px solid #3498db;">
+                <th>Type</th>
+                <th>Target</th>
+                <th>Result</th>
+                <th>Confidence</th>
+            </tr>
+        </thead>
+        <tbody id="history-body">
+        </tbody>
+    </table>
+    <button onclick="clearHistory()" class="btn-secondary">Clear History</button>
+</div>
+</body>
+<script src="js/news.js"></script>
+</html>

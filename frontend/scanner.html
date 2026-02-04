@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhishShield AI Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">
+            <i class="fas fa-shield-alt logo-icon"></i>
+            PHISH-SHIELD <span>AI</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="scanner.html" class="active">Scanner</a></li>
+            <li><a href="features.html">Features</a></li>
+            <li><a href="docs.html">Docs</a></li>
+        </ul>
+    </nav>
+
+    <div class="main-wrapper">
+        <div class="container">
+            <header>
+                <h1>🛡️ PhishShield <span class="ai-tag">AI</span></h1>
+                <p>Advanced Real-time Threat Detection</p>
+            </header>
+
+            <div class="scanner-box">
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="showTab('url')">URL Scanner</button>
+                    <button class="tab-btn" onclick="showTab('text')">Message Analyzer</button>
+                </div>
+
+                <div id="url-tab" class="tab-content">
+                    <input type="text" id="url-input" placeholder="Paste link here...">
+                    <button onclick="scanURL()" class="scan-btn" id="url-btn">
+                        <span id="url-loader" class="loader hidden"></span> 
+                        <span id="url-btn-text">Analyze Link</span>
+                    </button>
+                </div>
+
+                <div id="text-tab" class="tab-content" style="display:none;">
+                    <textarea id="text-input" placeholder="Paste suspicious text here..."></textarea>
+                    <button onclick="scanText()" class="scan-btn" id="text-btn">
+                        <span id="text-loader" class="loader hidden"></span> 
+                        <span id="text-btn-text">Analyze Message</span>
+                    </button>
+                </div>
+
+                <div id="result-container" class="result-box hidden">
+                    <div id="status-icon"></div>
+                    <h2 id="result-title">Result</h2>
+                    <p id="result-desc"></p>
+                    <div id="confidence-bar"></div>
+                    
+                    <div class="result-actions" style="margin-top: 20px;">
+                    <button id="copy-btn" onclick="copyResult()" class="copy-btn">
+                    <i class="fas fa-copy"></i> Copy Detailed Report
+                       </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    //History section
+    <div id="history-section" class="hidden">
+    <hr>
+    <h3>📋 Recent Scan History</h3>
+    <table id="history-table">
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Target</th>
+                <th>Result</th>
+                <th>Confidence</th>
+            </tr>
+        </thead>
+        <tbody id="history-body"></tbody>
+    </table>
+    <button onclick="clearHistory()" class="clear-btn">Clear History</button>
+</div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
