@@ -31,11 +31,12 @@ Phish-Shield AI is a full-stack web application designed to identify malicious U
 
 ### 1. Clone the Repository
 ```bash
+#clone it using this command
 git clone [https://github.com/Vinaynag16/Phish-Shield-AI.git](https://github.com/Vinaynag16/Phish-Shield-AI.git)
+
 cd Phish-Shield-AI
-
+```
 ---
-
 ## Setup and Requirements
 ```bash
 pip install -r requirements.txt
