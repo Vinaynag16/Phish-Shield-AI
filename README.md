@@ -27,7 +27,7 @@ Phish-Shield AI is a full-stack web application designed to identify malicious U
 
 ---
 
-## ⚙️ Local Setup & Installation
+## ⚙️ Local Setup & Installation Process
 
 ### 1. Clone the Repository
 ```bash
@@ -41,4 +41,5 @@ cd Phish-Shield-AI
 ```bash
 pip install -r requirements.txt
 ```
+
 
