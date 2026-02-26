@@ -37,6 +37,8 @@ git clone [https://github.com/Vinaynag16/Phish-Shield-AI.git](https://github.com
 cd Phish-Shield-AI
 ```
 ---
-## Setup and Requirements
+## ⚙️ Setup & Requirements
 ```bash
 pip install -r requirements.txt
+```
+
