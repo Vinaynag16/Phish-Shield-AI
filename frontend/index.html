@@ -25,17 +25,17 @@
 
     <header class="hero">
         <div class="hero-content">
-            <h1>Stay Ahead of <span class="text-gradient">Cyber Threats</span></h1>
+            <h1>Stay Ahead of <span class="text-gradient accent">Cyber Threats</span></h1>
             <p>Our AI-powered engine analyzes links and messages in real-time to keep you safe from phishing attacks.</p>
             <div class="hero-btns">
-                <a href="scanner.html" class="btn-primary">Launch Scanner</a>
-                <a href="#about" class="btn-secondary">Learn More</a>
+                <a href="scanner.html" class="btn-primary"><i class="fas fa-rocket" style="margin-right: 8px;"></i>Launch Scanner</a>
+                <a href="#features" class="btn-secondary"><i class="fas fa-info-circle" style="margin-right: 8px;"></i>Learn More</a>
             </div>
         </div>
     </header>
 
     <section class="stats-grid">
-        <div class="stat-card">
+        <div class="stat-card" id="stats-grid">
             <i class="fas fa-shield-alt"></i>
             <h3 id="total-scanned">15,402</h3>
             <p>Links Analyzed</p>
@@ -51,10 +51,10 @@
             <p>Detection Accuracy</p>
         </div>
     </section>
-<section class="news-container">
+<section class="news-container ">
     <div class="section-header">
-        <h2><i class="fas fa-rss"></i> Cyber Threat Intel</h2>
-        <p>Real-time updates on phishing attacks and global hacking incidents.</p>
+        <h2><i class="fas fa-rss"></i><span class="cyber-word"> Cyber </span><span class="text-gradient threat-word">Threat Intel</h2>
+        <p style="color: whitesmoke;">Real-time updates on phishing attacks and global hacking incidents and security updates.</p>
     </div>
     
     <div id="news-feed" class="news-grid">
@@ -88,7 +88,7 @@
     </div>
 </section>
 <div id="history-section" class="hidden" style="margin-top: 20px; padding: 15px; border-top: 1px solid #ccc;">
-    <h3>📋 Recent Scan History</h3>
+    <h2>📋 Recent <span class="threat-word text-gradient"> Scan History</h2>
     <table id="history-table" style="width: 100%; text-align: left; border-collapse: collapse;">
         <thead>
             <tr style="border-bottom: 2px solid #3498db;">
@@ -101,8 +101,9 @@
         <tbody id="history-body">
         </tbody>
     </table>
-    <button onclick="clearHistory()" class="btn-secondary">Clear History</button>
+    <button onclick="clearHistory()" class="btn-secondary" style="margin-top: 20px;">Clear History</button>
 </div>
 </body>
+<script src="js/script.js"></script>
 <script src="js/news.js"></script>
 </html>

@@ -726,3 +726,294 @@ td.phishing {
     font-weight: bold;
     font-size: 0.85rem;
 }
+/* Center the Intelligence Title */
+.news-container .section-header {
+    text-align: center;
+    margin-bottom: 40px; /* Space between title and news grid */
+    width: 100%;
+}
+
+.news-container .section-header h2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    font-size: 2.2rem;
+    color: var(--text-primary);
+}
+
+.news-container .section-header h2 i {
+    color: var(--accent-blue); /* Electric Cyan Icon */
+    text-shadow: 0 0 10px rgba(0, 242, 255, 0.5);
+}
+
+.news-container .section-header p {
+    color: #64748b; /* Subtitle color */
+    margin-top: 10px;
+}
+.news-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 25px;
+    padding: 0 5%;
+}
+
+.news-card {
+    background: rgba(15, 23, 42, 0.6); /* Translucent Navy */
+    backdrop-filter: blur(10px);
+    border: 1px solid #1e293b;
+    border-top: 3px solid var(--accent-blue); /* Cyber top-bar */
+    padding: 25px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.news-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--accent-blue);
+    box-shadow: 0 10px 30px rgba(0, 242, 255, 0.15);
+}
+
+.news-badge {
+    position: absolute;
+    top: -12px;
+    right: 20px;
+    background: var(--danger-red);
+    color: white;
+    font-size: 10px;
+    font-weight: 900;
+    padding: 4px 10px;
+    border-radius: 2px;
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+}
+/* Hero Buttons Container */
+.hero-btns {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+/* Base Button Styles */
+.btn-primary, .btn-secondary {
+    padding: 14px 32px;
+    border-radius: 8px;
+    font-weight: 800;
+    text-transform: uppercase;
+    text-decoration: none;
+    letter-spacing: 1.5px;
+    font-family: 'JetBrains Mono', monospace;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 0.95rem;
+}
+
+/* Launch Scanner: Electric Cyan Glow */
+.btn-primary {
+    background: var(--accent-blue);
+    color: #020617;
+    border: none;
+    box-shadow: 0 0 15px rgba(0, 242, 255, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 0 25px rgba(0, 242, 255, 0.6);
+    background: #fff; /* Shifts to white on hover for high contrast */
+}
+
+/* Learn More: Ghost Style with Border */
+.btn-secondary {
+    background: transparent;
+    color: var(--text-primary);
+    border: 2px solid var(--border-bright);
+    backdrop-filter: blur(5px);
+}
+
+.btn-secondary:hover {
+    border-color: var(--accent-blue);
+    color: var(--accent-blue);
+    background: rgba(0, 242, 255, 0.05);
+    transform: translateY(-3px);
+}
+body {
+    /* Layer 1: Dark gradient overlay to keep text readable
+       Layer 2: High-end technical blueprint/circuit image 
+    */
+    background: 
+        linear-gradient(rgba(2, 6, 23, 0.9), rgba(2, 6, 23, 0.95)), 
+        url('https://images.unsplash.com/photo-1558494949-ef010cbdcc51?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');
+    
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Add a subtle "Electronic Scan" overlay */
+body::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.05) 0px,
+        rgba(0, 0, 0, 0.05) 1px,
+        transparent 1px,
+        transparent 2px
+    );
+    pointer-events: none;
+    z-index: 999;
+}
+/* This makes your stats and cards look like they are floating glass */
+.stats-grid, .news-card, .feature-card {
+    background: rgba(15, 23, 42, 0.7) !important; /* Semi-transparent */
+    backdrop-filter: blur(10px);                  /* Frosted effect */
+    border: 1px solid rgba(0, 242, 255, 0.1);     /* Subtle cyan edge */
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+    border-radius: 12px;
+}
+
+/* Ensure the hero section is transparent so the body image shows through */
+.hero {
+    background: transparent !important;
+    padding-bottom: 100px;
+}
+/* 1. Global Background (Deep HUD Data visualization) */
+body {
+    background: 
+        radial-gradient(circle at center, rgba(2, 6, 23, 0.6) 0%, rgba(2, 6, 23, 0.95) 100%),
+        url('http://googleusercontent.com/image_collection/image_retrieval/9651239859891768259');
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 2. Elite Glass Panels (Stats, News, Features, Scanner Box) */
+.scanner-box, .news-card, .feature-card, .stat-card {
+    background: rgba(15, 23, 42, 0.4) !important;
+    backdrop-filter: blur(25px) contrast(120%) saturate(180%);
+    -webkit-backdrop-filter: blur(25px) contrast(120%) saturate(180%);
+    border: 1px solid rgba(0, 242, 255, 0.2);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+    border-radius: 16px;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Hover: Reactive Cyan Glow */
+.stat-card:hover, .news-card:hover {
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 30px rgba(0, 242, 255, 0.3);
+    transform: translateY(-5px);
+}
+
+/* 3. Button Refinement: Matching the Neon HUD */
+.btn-primary {
+    background: var(--accent-blue);
+    color: #020617;
+    border: none;
+    box-shadow: 0 0 15px rgba(0, 242, 255, 0.3);
+}
+
+.btn-primary:hover {
+    box-shadow: 0 0 25px rgba(0, 242, 255, 0.6);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: var(--accent-blue);
+    border: 2px solid var(--accent-blue);
+    backdrop-filter: blur(5px);
+}
+
+/* 4. Fix: Removing all old background colors */
+section, .hero, .news-container, .features-section {
+    background: transparent !important;
+    border: none !important;
+    padding: 100px 10%;
+}
+
+/* 5. A subtle fixed Cyber-Grid Overlay across the entire page */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-image: 
+        linear-gradient(rgba(0, 242, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 242, 255, 0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+    pointer-events: none;
+    z-index: 1;
+}
+:root {
+    --bg-color: #020617;
+    --accent-blue: #00f2ff;
+    --safe-green: #00ff88;
+    --text-primary: #f8fafc;
+}
+
+body {
+    /* Premium HUD Visualization Background */
+    background: 
+        radial-gradient(circle at center, rgba(2, 6, 23, 0.7) 0%, rgba(2, 6, 23, 0.95) 100%),
+        url('http://googleusercontent.com/image_collection/image_retrieval/9651239859891768259');
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+    color: var(--text-primary);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    margin: 0;
+    overflow-x: hidden;
+}
+
+/* Section Spacing */
+section {
+    padding: 80px 10% !important;
+    background: transparent !important;
+}
+
+/* Glassmorphism Cards */
+.news-card, .stat-card, .feature-card, .scanner-box {
+    background: rgba(15, 23, 42, 0.5) !important;
+    backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(0, 242, 255, 0.2);
+    border-radius: 16px;
+    padding: 25px;
+    transition: all 0.3s ease;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+}
+
+.news-card:hover {
+    border-color: var(--accent-blue);
+    transform: translateY(-5px);
+    box-shadow: 0 0 25px rgba(0, 242, 255, 0.2);
+}
+
+/* Fixed Cyber-Grid Overlay */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-image: 
+        linear-gradient(rgba(0, 242, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 242, 255, 0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Title Spacing */
+.section-header {
+    text-align: center;
+    margin-bottom: 60px !important;
+}

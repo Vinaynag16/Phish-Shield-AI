@@ -1,6 +1,19 @@
-fastapi==0.109.0
-uvicorn==0.27.0
-scikit-learn==1.4.0
-pandas==2.2.0
-joblib==1.3.2
-python-multipart==0.0.6
+# --- Existing Core ---
+fastapi
+uvicorn
+pandas
+numpy
+scikit-learn
+joblib
+tldextract
+
+# --- Version 1: Deep Learning & NLP ---
+tensorflow          # Required for LSTM/CNN Neural Networks
+transformers        # For BERT/RoBERTa text intent analysis
+torch               # Backend engine for Transformers
+tokenizers          # Fast text tokenization
+
+# --- Version 1: Advanced Feature Engineering ---
+python-whois        # To check Domain Age and Registration info
+requests            # For live API lookups (PhishTank/OpenPhish)
+matplotlib          # For visualizing training accuracy/loss
