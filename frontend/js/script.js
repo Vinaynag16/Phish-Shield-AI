@@ -1,6 +1,7 @@
-const API_BASE = "http://127.0.0.1:8000";
+const API_BASE = "http://localhost:8000";
+
 /**
- * URL Scanner Logic
+ * URL Scanner Logic - Upgraded for Deep Learning Engine
  */
 async function scanURL() {
     const urlInput = document.getElementById('url-input').value;
@@ -15,46 +16,48 @@ async function scanURL() {
         return;
     }
     
-    // 1. Lock UI
+    // 1. UI Lock & Initial "Thinking" State
     btn.disabled = true;
     input.readOnly = true;
     btn.innerHTML = `<span class="loader"></span> Analyzing...`;
 
-    // 1. Enter "Thinking" State
-    resultBox.classList.remove('hidden','safe-mode','danger-mode');
+    resultBox.classList.remove('hidden', 'safe-mode', 'danger-mode', 'warning-mode');
     title.classList.add('analyzing-text');
     title.style.color = "#3498db";
+    
     let dotCount = 0;
     const loadingInterval = setInterval(() => {
-        dotCount = (dotCount +1) % 4;
-        title.innerText = "🔍 AI is analyzing URL structure" + ".".repeat(dotCount);
-    },300);
-    desc.innerText = "Extracting features and checking brand reputation...";
+        dotCount = (dotCount + 1) % 4;
+        title.innerText = "🔍 AI is scanning URL structure" + ".".repeat(dotCount);
+    }, 300);
+    desc.innerText = "Extracting deep features and checking reputation...";
 
     try {
-        const response = await 
-            fetch(`${API_BASE}/predict/url`, {
+        const response = await fetch(`${API_BASE}/predict/url`, {
             method: 'POST',
+            mode: 'cors',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ url: urlInput })
         });
-        await new Promise(resolve => setTimeout(resolve, 1500));
-     
-        if (!response.ok) {
-            throw new Error("Server responded with an error status");
-        }
+
+        if (!response.ok) throw new Error("Server reached but returned error");
+        
         const data = await response.json();
+        
+        // Artificial delay for "Professional Feel" (optional)
+        await new Promise(resolve => setTimeout(resolve, 800));
+
         clearInterval(loadingInterval);
         displayResult(data);
         addToHistory("URL", urlInput, data);
 
     } catch (error) {
-        console.error("Connection Error:", error);
-        title.innerText = "❌ Connection Error";
-        desc.innerText = "Is your FastAPI server running? Check terminal for errors.";
+        console.error("Connection Detailed Error:", error);
+        clearInterval(loadingInterval);
+        title.innerText = "⚠️ Backend Offline";
+        desc.innerText = "Ensure your FastAPI server is running in the terminal.";
         resultBox.classList.add('danger-mode');
     } finally {
-        // 2. Unlock UI after 1.5s delay
         btn.disabled = false;
         input.readOnly = false;
         btn.innerHTML = "Analyze Link";
@@ -62,7 +65,7 @@ async function scanURL() {
 }
 
 /**
- * Text Scanner Logic
+ * Text Scanner Logic - Upgraded for NLP Neural Engine
  */
 async function scanText() {
     const messageText = document.getElementById('text-input').value;
@@ -75,9 +78,7 @@ async function scanText() {
         return;
     }
 
-    // 1. Enter "Thinking" State
-    resultBox.classList.remove('hidden');
-    resultBox.classList.remove('safe-mode', 'danger-mode');
+    resultBox.classList.remove('hidden', 'safe-mode', 'danger-mode', 'warning-mode');
     title.innerText = "🧠 AI is reading intent...";
     desc.innerText = "Scanning for social engineering patterns...";
 
@@ -93,100 +94,104 @@ async function scanText() {
         addToHistory('TEXT', messageText, data);
 
     } catch (error) {
-        console.error("Error:", error);
         title.innerText = "⚠️ Backend Offline";
-        desc.innerText = "Please ensure your Python FastAPI server is running.";
         resultBox.classList.add('danger-mode');
     }
 }
 
 /**
- * Universal Result Display Handler
+ * Universal Result Display Handler - Logic for Threat Levels
  */
 function displayResult(data) {
     const box = document.getElementById('result-container');
     const title = document.getElementById('result-title');
     const desc = document.getElementById('result-desc');
     const bar = document.getElementById('confidence-bar');
-    const scoreValue= data.score || 0;
-    bar.style.width = scoreValue + "%";
-    // 1. Reset state
-    box.classList.remove('hidden', 'safe-mode', 'danger-mode');
+    
+    // 1. Reset Classes
+    box.classList.remove('hidden', 'safe-mode', 'danger-mode', 'warning-mode');
 
-    // 2. Extract data from API response
+    // 2. Extract AI Metadata
     const prediction = data.prediction || "Unknown";
+    const threatLevel = data.threat_level || "Low";
     const method = data.method || "AI Analysis";
     const reason = data.reason || "Analysis Complete";
+    const scoreText = data.score || "0%";
+    const scoreValue = parseFloat(scoreText.toString().replace('%',''));
 
-    // 3. Update Text Content
-    // This will now show: "Engine: 🤖 Random Forest AI"
-    // and "🛡️ AI is 98.5% confident..."
+    // 3. Update Visuals
+    if (bar) bar.style.width = scoreValue + "%";
     title.innerText = prediction.toUpperCase();
-    desc.innerHTML = `<strong>Engine:</strong> ${method}<br>${reason}`;
+    title.style.color = "white";
     
-    // 4. Apply colors based on prediction
+    desc.innerHTML = `
+        <div class="risk-badge badge-${threatLevel.toLowerCase()}">RISK: ${threatLevel}</div>
+        <strong>Engine:</strong> ${method} (${scoreText})<br>
+        <p class="advice-text">${reason}</p>
+    `;
+    
+    // 4. Color Coding Logic
     const verdict = prediction.toLowerCase();
     if (verdict.includes("safe")) {
-        box.classList.add('safe-mode'); // Turns green
+        box.classList.add('safe-mode');
+    } else if (threatLevel === "High") {
+        box.classList.add('danger-mode');
     } else {
-        box.classList.add('danger-mode'); // Turns red
+        box.classList.add('warning-mode'); // Medium/Caution items
     }
 }
 
 /**
- * Tab Navigation Logic
+ * History Management (Persistent LocalStorage)
+ */
+let scanHistory = JSON.parse(localStorage.getItem('phish_history')) || [];
+
+function addToHistory(type, target, data){
+    const newScan = {
+        type: type.toUpperCase(),
+        target: target.length > 30 ? target.substring(0,27) + "..." : target,
+        prediction: data.prediction,
+        threat: data.threat_level || "Low",
+        score: data.score || "N/A",
+        timestamp: new Date().toLocaleTimeString()
+    };
+    scanHistory.unshift(newScan);
+    if (scanHistory.length > 5) scanHistory.pop(); 
+    localStorage.setItem('phish_history', JSON.stringify(scanHistory));
+    renderHistory();
+}
+
+function renderHistory() {
+    const body = document.getElementById('history-body');
+    const section = document.getElementById('history-section');
+    if (!body || !section) return;
+
+    if (scanHistory.length === 0) {
+        section.classList.add('hidden');
+        return;
+    }
+    
+    section.classList.remove('hidden');
+    body.innerHTML = scanHistory.map(scan => `
+        <tr>
+            <td>${scan.type}</td>
+            <td title="${scan.target}">${scan.target}</td>
+            <td class="status-${scan.prediction.toLowerCase()}">${scan.prediction.toUpperCase()}</td>
+            <td><span class="dot dot-${scan.threat.toLowerCase()}"></span> ${scan.threat}</td>
+        </tr>
+    `).join('');
+}
+
+/**
+ * Navigation & Utilities
  */
 function showTab(type) {
     document.getElementById('url-tab').style.display = type === 'url' ? 'block' : 'none';
     document.getElementById('text-tab').style.display = type === 'text' ? 'block' : 'none';
-    
     const buttons = document.querySelectorAll('.tab-btn');
     buttons[0].classList.toggle('active', type === 'url');
     buttons[1].classList.toggle('active', type === 'text');
-    
-    // Clear results when switching views
     document.getElementById('result-container').classList.add('hidden');
-}
- /** an Array to store scan history */
-let scanHistory = JSON.parse(localStorage.getItem('phish_history')) || [];
-// Function to add a scan to the list
-function addToHistory(type, target, data){
-    const newScan = {
-        type:type.toUpperCase(),
-        target:target.length > 30 ? target.substring(0,27) + "..." : target,
-        prediction:data.prediction,
-        score:data.score ? data.score + "%" : "N/A",
-        timestamp: new Date().toLocaleTimeString()
-    };
-    scanHistory.unshift(newScan);
-    if (scanHistory.length > 5) scanHistory.pop(); //only last 5 scans
-    localStorage.setItem('phish_history', JSON.stringify(scanHistory));
-    renderHistory();
-}
-//Function for rendering history
-function renderHistory() {
-    const historySection = document.getElementById('history-section');
-    const body = document.getElementById('history-body');
-    if (!historySection || !body) {
-        console.warn("History HTML elements not found. Skipping render.");
-        return;
-    }
-
-    if (scanHistory.length === 0) {
-        console.log("ℹ️ History is empty. Hiding section")
-        historySection.classList.add('hidden');
-        return;
-    }
-    console.log("✅ History found. Updating table with", scanHistory.length, "items.");
-    historySection.classList.remove('hidden');
-    body.innerHTML = scanHistory.map(scan => `
-        <tr>
-            <td>${scan.type}</td>
-            <td>${scan.target}</td>
-            <td class="${scan.prediction.toLowerCase()}">${scan.prediction.toUpperCase()}</td>
-            <td>${scan.score}</td>
-        </tr>
-    `).join('');
 }
 
 function clearHistory() {
@@ -195,19 +200,15 @@ function clearHistory() {
     renderHistory();
 }
 
-// Initial render on page load
-document.addEventListener('DOMContentLoaded', renderHistory);
-
 function copyResult() {
     const prediction = document.getElementById('result-title').innerText;
     const details = document.getElementById('result-desc').innerText;
-    const url = document.getElementById('url-input').value || "Scanned Text";
-
-    const report = `🛡️ Phish-Shield AI Report\n--------------------------\nTarget: ${url}\nVerdict: ${prediction}\nAnalysis: ${details}\n--------------------------\nScan Date: ${new Date().toLocaleString()}`;
-
+    const report = `🛡️ Phish-Shield AI Report\nVerdict: ${prediction}\n${details}\nDate: ${new Date().toLocaleString()}`;
     navigator.clipboard.writeText(report).then(() => {
-        const copyBtn = document.getElementById('copy-btn');
-        copyBtn.innerText = "✅ Copied!";
-        setTimeout(() => { copyBtn.innerText = "📋 Copy Detailed Report"; }, 2000);
+        const btn = document.getElementById('copy-btn');
+        btn.innerText = "✅ Copied!";
+        setTimeout(() => { btn.innerText = "📋 Copy Detailed Report"; }, 2000);
     });
 }
+
+document.addEventListener('DOMContentLoaded', renderHistory);

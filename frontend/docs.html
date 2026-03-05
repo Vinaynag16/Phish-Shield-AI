@@ -26,23 +26,34 @@
                 <li><a href="#machine-learning">AI Model Logic</a></li>
             </ul>
         </aside>
+       <main class="docs-content">
+    <section id="overview">
+        <h2>Project Overview</h2>
+        <p>PhishShield AI is a proactive security pipeline. By combining deterministic whitelisting with LSTM-based deep learning, it provides a robust shield against modern social engineering.</p>
+    </section>
 
-        <main class="docs-content">
-            <section id="overview">
-                <h2>Project Overview</h2>
-                <p>PhishShield AI is a proactive defense system designed to identify social engineering threats in real-time using Machine Learning.</p>
-            </section>
+    <section id="architecture">
+        <h2>System Architecture</h2>
+        <p>The system follows a <b>Synchronous Multi-Layer Defense</b>:</p>
+        <ul>
+            <li><b>Layer 1: Static Analysis</b> — TLD extraction and Whitelist verification.</li>
+            <li><b>Layer 2: Neural Inference</b> — LSTM model analyzes unknown URL sequences.</li>
+            <li><b>Layer 3: Threat Mapping</b> — Categorizes confidence into High/Medium/Low risk levels.</li>
+        </ul>
+    </section>
 
-            <section id="architecture">
-                <h2>System Architecture</h2>
-                <p>The system utilizes a <b>FastAPI</b> backend to bridge the gap between our <b>Scikit-learn</b> models and the <b>Frontend</b> interface.</p>
-                
-            </section>
-
-            <section id="machine-learning">
-                <h2>Machine Learning Logic</h2>
-                <p>We use a <b>Random Forest Classifier</b> for URL analysis, achieving high accuracy by evaluating features like domain length, special characters, and HTTPS status.</p>
-            </section>
+    <section id="machine-learning">
+        <h2>Deep Learning Logic</h2>
+        <p>We utilize <b>Long Short-Term Memory (LSTM)</b> networks for URL analysis. Unlike older Random Forest methods, LSTMs treat URLs as time-series data of characters, capturing the "intent" behind the domain structure.</p>
+        
+        <div class="tech-stack-tags">
+            <span class="tag">TensorFlow/Keras</span>
+            <span class="tag">FastAPI</span>
+            <span class="tag">Python</span>
+            <span class="tag">TLDExtract</span>
+        </div>
+    </section>
+</main>
         </main>
     </div>
 </body>

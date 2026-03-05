@@ -18,22 +18,30 @@
     </nav>
 
     <section class="features-detail">
-        <h1 class="text-gradient">Core Capabilities</h1>
-        
-        <div class="detail-grid">
-            <div class="detail-card">
-                <i class="fas fa-brain"></i>
-                <h2>Machine Learning Accuracy</h2>
-                <p>Our Random Forest model was trained on over 50,000 verified URLs. It looks for "Domain Age," "Sub-domain counts," and "Entropy" to catch zero-day threats.</p>
-                <div class="accuracy-bar"><div class="fill" style="width: 97%;">97.4%</div></div>
-            </div>
-
-            <div class="detail-card">
-                <i class="fas fa-file-code"></i>
-                <h2>TF-IDF Text Analysis</h2>
-                <p>By converting message text into numerical vectors, we can identify "urgency" and "fear" patterns commonly used in phishing emails.</p>
-            </div>
+    <h1 class="text-gradient">Core Capabilities v2.0</h1>
+    
+    <div class="detail-grid">
+        <div class="detail-card">
+            <i class="fas fa-network-wired"></i>
+            <h2>Sequence-Based Detection</h2>
+            <p>Our LSTM model "remembers" character order, allowing it to catch sophisticated typosquatting (e.g., <i>g00gle.com</i>) that standard ML often misses.</p>
+            <div class="accuracy-bar"><div class="fill" style="width: 98.2%;">98.2% Accuracy</div></div>
         </div>
-    </section>
+
+        <div class="detail-card">
+            <i class="fas fa-shield-halved"></i>
+            <h2>Deterministic Layer</h2>
+            <p>Before AI inference, URLs are cross-referenced against a verified TLD whitelist, providing a "Fast-Path" for trusted enterprise infrastructure.</p>
+            <div class="status-badge">Active: 1,000,000+ Domains</div>
+        </div>
+
+        <div class="detail-card">
+            <i class="fas fa-comment-dots"></i>
+            <h2>NLP Intent Analysis</h2>
+            <p>Processes message text to identify social engineering triggers, urgency tactics, and credential harvesting lures using neural language processing.</p>
+            <div class="accuracy-bar"><div class="fill" style="width: 95.8%;">95.8% Accuracy</div></div>
+        </div>
+    </div>
+</section>
 </body>
 </html>

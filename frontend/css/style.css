@@ -1017,3 +1017,90 @@ body::before {
     text-align: center;
     margin-bottom: 60px !important;
 }
+.warning-mode {
+    background-color: #f39c12 !important; /* Orange */
+    border-left: 8px solid #d35400;
+    color: white;
+}
+
+.threat-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 4px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-size: 0.8rem;
+}
+
+.threat-dot {
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+}
+.threat-dot.high { background-color: #e74c3c; }
+.threat-dot.medium { background-color: #f39c12; }
+.threat-dot.low { background-color: #2ecc71; }
+/* Threat Level Colors */
+.warning-mode { background: #f39c12 !important; border-left: 10px solid #d35400; color: white; }
+.safe-mode { background: #27ae60 !important; border-left: 10px solid #1e8449; color: white; }
+.danger-mode { background: #c0392b !important; border-left: 10px solid #922b21; color: white; }
+
+/* Risk Badges */
+.risk-badge {
+    display: inline-block;
+    padding: 2px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    background: rgba(0,0,0,0.2);
+    margin-bottom: 8px;
+}
+
+/* History Dots */
+.dot { height: 8px; width: 8px; border-radius: 50%; display: inline-block; margin-right: 5px; }
+.dot-high { background-color: #ff4d4d; }
+.dot-medium { background-color: #ffa500; }
+.dot-low { background-color: #2ecc71; }
+.badge-new {
+    background: var(--accent-color);
+    color: white;
+    padding: 5px 15px;
+    border-radius: 50px;
+    display: inline-block;
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+    border: 1px solid rgba(255,255,255,0.3);
+}
+
+.history-container {
+    padding: 60px 5%;
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.table-wrapper {
+    overflow-x: auto;
+    background: #1a1a1a;
+    border-radius: 10px;
+    padding: 20px;
+    border: 1px solid #333;
+}
+
+#history-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#history-table th {
+    text-align: left;
+    padding: 12px;
+    border-bottom: 2px solid var(--primary-color);
+}
+
+#history-table td {
+    padding: 12px;
+    border-bottom: 1px solid #333;
+}
