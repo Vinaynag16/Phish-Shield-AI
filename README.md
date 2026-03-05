@@ -87,7 +87,7 @@ Ensure the API_BASE in your JavaScript points to your running backend
 (default: http://localhost:8000).
 ```
 
-📊 Model Training & Research
+## 📊 Model Training & Research
 
 The notebooks/ directory contains the complete lifecycle of the project:
 
@@ -100,7 +100,7 @@ Visualizing character distribution and domain entropy.
 Training:
 Comparative analysis between Random Forest and LSTM architectures.
 
-🔐 Security Engineering Highlight
+## 🔐 Security Engineering Highlight
 
 This project demonstrates the transition from Traditional ML (Random Forest)
 to Deep Learning (LSTM).
@@ -119,13 +119,14 @@ paypal.com
 These attacks often bypass traditional filters but can be detected through
 sequence-based neural analysis.
 
-👨‍💻 Developed By
+## 👨‍💻 Developed By
 
 Vinay Nag
 Software Developer | Cybersecurity Enthusiast
 Focus: AI-Driven Threat Detection & SOC Automation
 
-⭐ If you find this architecture interesting, please consider starring the repository!
+# ⭐ If you find this architecture interesting, please consider starring the repository!
+
 
 
 
