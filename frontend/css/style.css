@@ -1291,3 +1291,43 @@ body::before {
     font-weight: 900;
     white-space: nowrap;
 }
+.engine-info {
+    margin-top: 20px;
+    width: 100%;
+}
+
+.engine-label {
+    font-size: 0.7rem;
+    color: #888;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.accuracy-bar {
+    width: 100%;
+    height: 26px; /* Increased height to prevent clipping */
+    background: #111;
+    border-radius: 4px;
+    border: 1px solid #333;
+    overflow: hidden;
+    position: relative;
+}
+
+.fill {
+    height: 100%;
+    background: #00ff88;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Ensures text is perfectly centered */
+    transition: width 1.5s ease-in-out;
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
+}
+
+.percentage-text {
+    color: #000; /* Black text for maximum contrast on green */
+    font-size: 0.85rem;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+    white-space: nowrap; /* Prevents text from wrapping/breaking */
+}
