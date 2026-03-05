@@ -11,8 +11,7 @@
 
     <nav class="navbar">
         <div class="logo">
-            <i class="fas fa-user-shield logo-icon"></i>
-            <span>PHISH<span class="shield-text">-SHIELD</span> <span class="ai-badge">AI</span></span>
+            <i class="fas fa-user-shield"></i> PHISH-SHIELD <span class="version-tag">v2.0</span>
         </div>
         <ul class="nav-links">
             <li><a href="index.html">Home</a></li>
@@ -22,55 +21,46 @@
         </ul>
     </nav>
 
-    <header class="features-hero">
-        <div class="hero-content">
-            <h1 class="text-gradient">Core Capabilities v2.0</h1>
-            <p>A multi-layered defense system combining deep learning with deterministic verification.</p>
-        </div>
-    </header>
-
     <section class="features-detail">
+        <h1 class="text-gradient">Core Capabilities</h1>
+        
         <div class="detail-grid">
             <div class="detail-card">
-                <div class="card-header">
-                    <i class="fas fa-network-wired"></i>
+                <div class="card-top">
+                    <i class="fas fa-network-wired card-icon"></i>
                     <h2>Sequence-Based Detection</h2>
                 </div>
                 <p>Our <strong>LSTM (Long Short-Term Memory)</strong> model analyzes URLs as sequences of characters. This allows it to identify sophisticated typosquatting patterns like <span class="url-example">g00gle.com</span> that traditional machine learning often fails to detect.</p>
-                <div class="accuracy-container">
-                    <span class="label">Neural Engine Confidence:</span>
-                    <div class="accuracy-bar"><div class="fill" style="width: 98.2%;">98.2% Accuracy</div></div>
+                
+                <div class="engine-info">
+                    <span class="engine-label">Neural Engine Confidence:</span>
+                    <div class="accuracy-bar">
+                        <div class="fill" style="width: 98.2%;"><span class="percentage-text">98.2% Accuracy</span></div>
+                    </div>
                 </div>
             </div>
 
             <div class="detail-card">
-                <div class="card-header">
-                    <i class="fas fa-shield-halved"></i>
+                <div class="card-top">
                     <h2>Deterministic Layer</h2>
                 </div>
                 <p>To eliminate false positives for known infrastructure, URLs are first cross-referenced against a massive, high-speed whitelist. This provides a "Fast-Path" verification for over 1,000,000+ trusted enterprise domains.</p>
-                <div class="status-badge-container">
-                    <span class="status-badge pulse"><i class="fas fa-database"></i> 1,000,000+ Domains Indexed</span>
+                
+                <div class="database-stats">
+                    <i class="fas fa-database db-icon"></i>
+                    <span class="db-count">1,000,000+ Domains Indexed</span>
                 </div>
             </div>
 
             <div class="detail-card">
-                <div class="card-header">
-                    <i class="fas fa-comment-dots"></i>
+                <div class="card-top">
+                    <i class="fas fa-comment-dots card-icon"></i>
                     <h2>NLP Intent Analysis</h2>
                 </div>
                 <p>Our Natural Language Processing engine scans messages for social engineering triggers, urgency tactics, and credential harvesting lures. It extracts intent from the "textual DNA" of the message using neural language processing.</p>
-                <div class="accuracy-container">
-                    <span class="label">Semantic Analysis Confidence:</span>
-                    <div class="accuracy-bar"><div class="fill" style="width: 95.8%;">95.8% Accuracy</div></div>
-                </div>
             </div>
         </div>
     </section>
-
-    <footer class="footer">
-        <p>&copy; 2026 PhishShield AI | Enterprise Cybersecurity Architecture</p>
-    </footer>
 
 </body>
 </html>
