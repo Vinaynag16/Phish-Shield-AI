@@ -1104,3 +1104,35 @@ body::before {
     padding: 12px;
     border-bottom: 1px solid #333;
 }
+/* Styling for the URL example inside the card */
+.url-example {
+    color: #00ff88; /* The neon green from your image */
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    font-size: 0.95rem; /* Adjust this to make it smaller or larger */
+    background: rgba(0, 255, 136, 0.1); /* Subtle green glow background */
+    padding: 2px 6px;
+    border-radius: 4px;
+    display: inline-block;
+    margin: 0 2px;
+}
+
+/* Accuracy Bar Styling (to match your screenshot) */
+.accuracy-bar {
+    width: 100%;
+    background: #222;
+    border-radius: 50px;
+    margin-top: 15px;
+    height: 12px; /* Slimmer bar */
+    overflow: hidden;
+}
+
+.fill {
+    height: 100%;
+    background: linear-gradient(90deg, #00ff88, #00bd65);
+    color: #000;
+    font-size: 0.7rem;
+    font-weight: bold;
+    text-align: center;
+    line-height: 12px;
+}
