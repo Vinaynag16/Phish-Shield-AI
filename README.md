@@ -62,8 +62,8 @@ Phish-Shield-AI/
 ├── notebooks/            # Research, EDA, and Model Training logs
 └── requirements.txt      # Python dependencies
 ````
-
-##⚙️ Quick Start
+---
+## ⚙️ Quick Start
 
 1. Initialize Backend
 ```bash
@@ -126,4 +126,5 @@ Software Developer | Cybersecurity Enthusiast
 Focus: AI-Driven Threat Detection & SOC Automation
 
 ⭐ If you find this architecture interesting, please consider starring the repository!
+
 
