@@ -71,7 +71,7 @@ Phish-Shield-AI/
 pip install -r requirements.txt
 ````
 
-# Start the FastAPI server
+## Start the FastAPI server
 
 ```bash
 cd backend
@@ -126,5 +126,6 @@ Software Developer | Cybersecurity Enthusiast
 Focus: AI-Driven Threat Detection & SOC Automation
 
 ⭐ If you find this architecture interesting, please consider starring the repository!
+
 
 
