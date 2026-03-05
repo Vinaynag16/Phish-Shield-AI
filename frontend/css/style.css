@@ -1136,3 +1136,34 @@ body::before {
     text-align: center;
     line-height: 12px;
 }
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.card-header i {
+    font-size: 2rem;
+    color: var(--accent-color);
+}
+
+.accuracy-container {
+    margin-top: 25px;
+}
+
+.accuracy-container .label {
+    font-size: 0.8rem;
+    color: #888;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.pulse {
+    animation: pulse-animation 2s infinite;
+}
+
+@keyframes pulse-animation {
+    0% { box-shadow: 0 0 0 0px rgba(0, 255, 136, 0.4); }
+    100% { box-shadow: 0 0 0 10px rgba(0, 255, 136, 0); }
+}
