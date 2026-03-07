@@ -8,29 +8,21 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 
-# --- DYNAMIC PATHING (Replaces Hardcoded C:\...) ---
-# This finds the root directory of your project automatically
-BASE_DIR = r"C:\Users\nagav\Desktop\phishing project"
-
 # --- NEW: Import your LSTM Engine ---
-# Add the project root to the system path for local imports
-sys.path.append(BASE_DIR)
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from models1.predict import PhishShieldInference
 
 # --- CONFIGURATION ---
 app = FastAPI(title="Phish-Shield AI Engine (v2.0)")
-
-# Define paths relative to the BASE_DIR
+BASE_DIR = r"C:\Users\nagav\Desktop\phishing project"
 MODEL_DIR = os.path.join(BASE_DIR, "models")
-MODELS1_DIR = os.path.join(BASE_DIR, "models1")
 WHITELIST_PATH = os.path.join(BASE_DIR, "backend", "whitelist.txt")
 
 # --- ENGINE INITIALIZATION ---
-# Load models using the dynamic paths
 text_model = joblib.load(os.path.join(MODEL_DIR, "text_model.pkl"))
 url_engine = PhishShieldInference(
-    model_path=os.path.join(MODELS1_DIR, 'phishshield_lstm.h5'),
-    tokenizer_path=os.path.join(MODELS1_DIR, 'url_tokenizer.pkl')
+    model_path=os.path.join(BASE_DIR, 'models1', 'phishshield_lstm.h5'),
+    tokenizer_path=os.path.join(BASE_DIR, 'models1', 'url_tokenizer.pkl')
 )
 
 class URLInput(BaseModel): url: str
@@ -47,6 +39,7 @@ def is_whitelisted(url):
         domain = f"{extracted.domain}.{extracted.suffix}"
         
         with open(WHITELIST_PATH, "r") as f:
+            # Read lines, strip whitespace, and ignore empty lines
             whitelist = [line.strip().lower() for line in f if line.strip()]
             
         return any(item in url.lower() or item == domain for item in whitelist)
@@ -55,16 +48,31 @@ def is_whitelisted(url):
         return False
 
 # --- HELPER: Threat Level Logic ---
-def get_threat_metadata(confidence_str, is_phishing, text_content=""):
+def get_threat_metadata(confidence_str, is_phishing , content_to_check=""):
     try:
-        # Convert confidence string (e.g., "85.9%") to a float
         score = float(str(confidence_str).replace('%', ''))
-    except ValueError:
+    except:
         score = 0.0
+        content_to_check = content_to_check.lower() if content_to_check else ""
+       # 1. EXPANDED KEYWORD GUARD: Common phishing "hooks"
+    # Added: 'package', 'warehouse', 'delivery', 'tracking', 'link', 'update'
+    danger_words = [
+        'login', 'verify', 'account', 'password', 'click', 'bank', 
+        'urgent', 'winner', 'package', 'warehouse', 'delivery', 
+        'tracking', 'link', 'update', 'held', 'incorrect'
+    ]
+    
+    # Check if ANY danger word is in the message
+    has_danger_word = any(word in content_to_check.lower() for word in danger_words)#run
 
-    # SAFETY CHECK: If the message is very short, override the phishing verdict
-    if is_phishing and text_content and len(text_content.split()) < 4:
-        return "Low", "🟢 Safe: Message is too short to be identified as phishing."
+    # 2. SMART SAFETY CHECK:
+    # If it's a short message but has a DANGER word, we TRUST the AI's phishing verdict.
+    if is_phishing and content_to_check and len(content_to_check.split()) < 10:
+        if not has_danger_word:
+            return "Low", "🟢 Safe: Casual conversation detected."
+        else:
+            # If AI thinks it's phish AND it has a danger word, it stays Phishing!
+            return "High", "🔴 Critical: Short message contains high-risk keywords." 
 
     if not is_phishing:
         return "Low", "🟢 Safe: Minimal risk detected."
@@ -81,6 +89,7 @@ def get_threat_metadata(confidence_str, is_phishing, text_content=""):
 async def predict_url(data: URLInput):
     url_to_test = data.url.lower().strip()
     
+    # 1. Check Whitelist First
     if is_whitelisted(url_to_test):
         return {
             "prediction": "safe",
@@ -90,6 +99,7 @@ async def predict_url(data: URLInput):
             "reason": "🟢 Verified Trusted Domain: This site is recognized as safe."
         }
 
+    # 2. Run AI Engine if not whitelisted
     try:
         result = url_engine.predict_url(url_to_test)
         is_phish = result["status"] == "PHISHING"
@@ -114,10 +124,11 @@ async def predict_text(data: TextInput):
         confidence = round(np.max(prob) * 100, 2)
         
         is_phish = (prediction == 1)
-        level, advice = get_threat_metadata(confidence, is_phish)
+        level, advice = get_threat_metadata(confidence, is_phish, data.text)
+        final_verdict = "safe" if "Safe" in advice else "phishing"
         
         return {
-            "prediction": "phishing" if is_phish else "safe",
+            "prediction": final_verdict,
             "score": f"{confidence}%",
             "threat_level": level,
             "method": "🧠 NLP Neural Engine",
@@ -126,10 +137,10 @@ async def predict_text(data: TextInput):
     except Exception:
         return {"prediction": "Error", "reason": "⚠️ NLP Engine error."}
 
-# --- MIDDLEWARE (Updated for security) ---
+# --- MIDDLEWARE ---
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # In production, replace with your GitHub Pages URL
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

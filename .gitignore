@@ -7,3 +7,10 @@ models1/*.pt
 __pycache__/
 .env
 backend/whitelist.txt
+*.h5
+*.pkl
+*.joblib
+.DS_Store
+Thumbs.db
+*.log
+*.csv
