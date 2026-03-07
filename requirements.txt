@@ -3,12 +3,12 @@ fastapi
 uvicorn
 pandas
 numpy
-scikit-learn
+scikit-learn==1.4.0
 joblib
 tldextract
 
 # --- Version 1: Deep Learning & NLP ---
-tensorflow          # Required for LSTM/CNN Neural Networks
+tensorflow>=2.15.0         # Required for LSTM/CNN Neural Networks
 transformers        # For BERT/RoBERTa text intent analysis
 torch               # Backend engine for Transformers
 tokenizers          # Fast text tokenization

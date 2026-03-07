@@ -1357,3 +1357,31 @@ body::before {
     font-weight: 900;
     text-transform: uppercase;
 }
+.accuracy-bar {
+    width: 100%;
+    height: 28px;
+    background: #111;
+    border-radius: 4px;
+    border: 1px solid #333;
+    overflow: hidden;
+    position: relative; /* Allows text to be positioned relative to the bar */
+}
+
+.fill {
+    height: 100%;
+    background: #00ff88;
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
+    transition: width 1.5s ease-in-out;
+}
+
+.percentage-text {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    line-height: 28px; /* Matches bar height to center vertically */
+    color: #fff; /* White text for better contrast if it overlaps the dark track */
+    mix-blend-mode: difference; /* Smart trick: turns black on green, white on dark */
+    font-size: 0.8rem;
+    font-weight: 900;
+    pointer-events: none;
+}
