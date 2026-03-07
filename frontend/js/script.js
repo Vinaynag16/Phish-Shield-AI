@@ -1,5 +1,5 @@
-const API_BASE = "https://gtx15tbc-8000.inc1.devtunnels.ms";
-//https://gtx15tbc-8000.inc1.devtunnels.ms/
+const API_BASE = "http://127.0.0.1:8000";
+
 /**
  * URL Scanner Logic - Upgraded for Deep Learning Engine
  */

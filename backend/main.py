@@ -10,7 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 # --- DYNAMIC PATHING (Replaces Hardcoded C:\...) ---
 # This finds the root directory of your project automatically
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = r"C:\Users\nagav\Desktop\phishing project"
 
 # --- NEW: Import your LSTM Engine ---
 # Add the project root to the system path for local imports
@@ -131,5 +131,4 @@ app.add_middleware(
 )
 
 if __name__ == "__main__":
-    # 0.0.0.0 is critical for Docker and Dev Tunnel access
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="127.0.0.1", port=8000)

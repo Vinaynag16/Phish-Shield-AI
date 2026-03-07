@@ -1,4 +1,4 @@
-# --- Existing Core ---
+# --- Core API & Processing ---
 fastapi
 uvicorn
 pandas
@@ -7,13 +7,15 @@ scikit-learn==1.4.0
 joblib
 tldextract
 
-# --- Version 1: Deep Learning & NLP ---
-tensorflow>=2.15.0         # Required for LSTM/CNN Neural Networks
-transformers        # For BERT/RoBERTa text intent analysis
-torch               # Backend engine for Transformers
-tokenizers          # Fast text tokenization
+# --- AI Engines (Locked for Compatibility) ---
+tensorflow==2.15.0
+tf_keras
+h5py
+# Only keep these if you are actively using BERT/RoBERTa in main.py
+transformers
+torch
+tokenizers
 
-# --- Version 1: Advanced Feature Engineering ---
-python-whois        # To check Domain Age and Registration info
-requests            # For live API lookups (PhishTank/OpenPhish)
-matplotlib          # For visualizing training accuracy/loss
+# --- Intelligence & Utilities ---
+python-whois
+requests
