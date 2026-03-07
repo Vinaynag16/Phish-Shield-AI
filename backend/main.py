@@ -55,11 +55,16 @@ def is_whitelisted(url):
         return False
 
 # --- HELPER: Threat Level Logic ---
-def get_threat_metadata(confidence_str, is_phishing):
+def get_threat_metadata(confidence_str, is_phishing, text_content=""):
     try:
+        # Convert confidence string (e.g., "85.9%") to a float
         score = float(str(confidence_str).replace('%', ''))
-    except:
+    except ValueError:
         score = 0.0
+
+    # SAFETY CHECK: If the message is very short, override the phishing verdict
+    if is_phishing and text_content and len(text_content.split()) < 4:
+        return "Low", "🟢 Safe: Message is too short to be identified as phishing."
 
     if not is_phishing:
         return "Low", "🟢 Safe: Minimal risk detected."

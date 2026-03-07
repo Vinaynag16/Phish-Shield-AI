@@ -6,3 +6,4 @@ models1/*.pkl
 models1/*.pt
 __pycache__/
 .env
+backend/whitelist.txt
