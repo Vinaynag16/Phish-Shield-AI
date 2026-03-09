@@ -270,6 +270,7 @@ textarea {
     color: #00ff88;
 }
 
+
 /* Hero Section */
 .hero {
     padding: 100px 10%;
@@ -1103,4 +1104,315 @@ body::before {
 #history-table td {
     padding: 12px;
     border-bottom: 1px solid #333;
+}
+/* Default Light Theme */
+:root {
+    --bg-color: #ffffff;
+    --text-color: #333333;
+    --card-bg: #f4f4f4;
+    --accent-color: #007bff;
+}
+
+/* Dark Theme Variables */
+body.dark-mode {
+    --bg-color: #121212;
+    --text-color: #e0e0e0;
+    --card-bg: #1e1e1e;
+    --accent-color: #375a7f;
+}
+
+/* Apply variables to your elements */
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s, color 0.3s; /* Smooth transition */
+}
+
+.dashboard-card {
+    background-color: var(--card-bg);
+}
+/* Container for the toggle */
+.theme-switch-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#theme-text {
+    font-size: 0.85rem;
+    color: var(--text-color);
+    font-weight: 500;
+}
+
+/* The Switch Base */
+.theme-switch {
+    display: inline-block;
+    height: 28px;
+    position: relative;
+    width: 55px;
+}
+
+.theme-switch input {
+    display: none;
+}
+
+/* The Slider with Glassmorphism */
+.slider {
+    background: rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    bottom: 0;
+    cursor: pointer;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: .4s;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5px;
+}
+
+.slider:before {
+    background-color: #fff;
+    bottom: 3px;
+    content: "";
+    height: 20px;
+    left: 4px;
+    position: absolute;
+    transition: .4s;
+    width: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 2;
+}
+
+/* Animated Round Borders */
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+/* Switch State Changes */
+input:checked + .slider {
+    background-color: var(--accent-color); /* Use your Phish-Shield Blue */
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+/* Icon Positioning */
+.icon {
+    font-size: 12px;
+    user-select: none;
+}
+.navbar .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    list-style: none;
+}
+
+.theme-switch-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-right: 10px;
+}
+
+#theme-text {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+/* Ensure icons are centered in the slider */
+.slider .icon {
+    line-height: 28px;
+    pointer-events: none;
+}
+:root {
+    --bg-color: #ffffff;
+    --text-color: #1a1a1a;
+    --hero-bg: radial-gradient(circle, #f8f9fa 0%, #e9ecef 100%);
+    --nav-bg: rgba(255, 255, 255, 0.9);
+}
+
+body.dark-mode {
+    --bg-color: #0a0e17; /* Deep Navy/Black like the reference */
+    --text-color: #ffffff;
+    /* This creates that high-end grid look from your image */
+    --hero-bg: linear-gradient(rgba(10, 14, 23, 0.8), rgba(10, 14, 23, 0.8)), 
+               url('https://www.transparenttextures.com/patterns/carbon-fibre.png'),
+               radial-gradient(circle at top, #16213e 0%, #0a0e17 100%);
+    --nav-bg: rgba(10, 14, 23, 0.95);
+}
+.btn-primary {
+    background: #00f2ff; /* Cyber Cyan */
+    color: #000;
+    font-weight: bold;
+    box-shadow: 0 0 20px rgba(0, 242, 255, 0.3);
+    border: none;
+    transition: 0.3s ease;
+}
+
+.btn-primary:hover {
+    box-shadow: 0 0 30px rgba(0, 242, 255, 0.6);
+    transform: translateY(-2px);
+}
+
+.text-gradient.accent {
+    background: linear-gradient(90deg, #00f2ff, #00dbde);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+}
+:root {
+    /* Always keep text white as requested */
+    --global-text: #ffffff; 
+    
+    /* Light Theme: High-contrast white grid */
+    --bg-color: #f0f2f5;
+    --hero-bg: linear-gradient(rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.7)), 
+               url('https://www.transparenttextures.com/patterns/white-grid.png'),
+               #ffffff;
+    --card-bg: rgba(255, 255, 255, 0.9);
+}
+
+body.dark-mode {
+    /* Dark Theme: Deep Navy Cyber Grid */
+    --bg-color: #06090f;
+    --hero-bg: linear-gradient(rgba(6, 9, 15, 0.8), rgba(6, 9, 15, 0.9)), 
+               url('https://www.transparenttextures.com/patterns/carbon-fibre.png'),
+               radial-gradient(circle at top, #111827 0%, #06090f 100%);
+    --card-bg: #111827;
+}
+
+/* Apply the fixed white text color globally */
+body, h1, h2, h3, p, li a {
+    color: var(--global-text) !important;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3); /* Makes white text readable on light backgrounds */
+}
+.hero {
+    background: var(--hero-bg);
+    background-attachment: fixed; /* Keeps pattern steady while scrolling */
+    background-size: auto, cover;
+    position: relative;
+    padding: 100px 20px;
+    overflow: hidden;
+}
+
+/* This adds a professional subtle glow behind your text */
+.hero::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60%;
+    height: 60%;
+    background: var(--accent-color);
+    filter: blur(160px);
+    opacity: 0.15;
+    z-index: 0;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1; /* Ensures text is above the glow */
+}
+.stat-card, .feature-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 2rem;
+    /* Since text is white, let's give cards a slight dark tint in light mode */
+}
+
+/* Ensure navbar stays visible */
+.navbar {
+    background: rgba(0, 0, 0, 0.8); /* Keep nav dark to contrast white text */
+    backdrop-filter: blur(15px);
+}
+#theme-text {
+    color: #ffffff !important; /* Force white color */
+    font-weight: 500;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5); /* Adds a subtle shadow so it's readable on light backgrounds */
+    transition: none; /* Prevents color flickering during toggle */
+}
+
+/* Ensure the wrapper doesn't have any conflicting filters */
+.theme-switch-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #ffffff !important;
+}
+:root {
+    /* Light Mode: A technical "Cloud" grey with a grid */
+    --bg-color: #1a202c; /* Deep slate instead of white */
+    --hero-bg: linear-gradient(rgba(26, 32, 44, 0.8), rgba(26, 32, 44, 0.9)), 
+               url('https://www.transparenttextures.com/patterns/stardust.png');
+    --nav-bg: #0f172a;
+}
+
+body.dark-mode {
+    /* Dark Mode: The "Midnight" theme from your reference */
+    --bg-color: #05070a;
+    --hero-bg: linear-gradient(rgba(5, 7, 10, 0.7), rgba(5, 7, 10, 0.8)), 
+               url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
+    --nav-bg: #000000;
+}
+:root {
+    /* LIGHT MODE (Professional / High Visibility) */
+    --bg-color: #f4f7f9; /* Soft tech grey */
+    --text-color: #ffffff; /* Persistent White Text */
+    
+    /* A clean, bright grid pattern for "Light Mode" */
+    --hero-bg: linear-gradient(rgba(52, 152, 219, 0.8), rgba(44, 62, 80, 0.9)), 
+               url('https://www.transparenttextures.com/patterns/white-grid.png');
+    
+    --card-bg: rgba(255, 255, 255, 0.15); /* Semi-transparent cards */
+    --accent-color: #3498db;
+}
+
+body.dark-mode {
+    /* DARK MODE (Stealth / Deep Space) */
+    --bg-color: #05070a;
+    
+    /* The deep navy carbon fiber look from your reference */
+    --hero-bg: linear-gradient(rgba(5, 7, 10, 0.75), rgba(5, 7, 10, 0.85)), 
+               url('https://www.transparenttextures.com/patterns/carbon-fibre.png'),
+               radial-gradient(circle at top, #16213e 0%, #05070a 100%);
+               
+    --card-bg: #111827;
+    --accent-color: #00f2ff; /* Cyber Cyan */
+}
+/* This applies to the text next to your toggle and everywhere else */
+#theme-text, .hero h1, .hero p {
+    color: #ffffff !important;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4); /* Critical for readability */
+}
+
+/* Force the Disable Dark Mode caption to stay white */
+.theme-switch-wrapper span, #theme-text {
+    color: #ffffff !important;
+}
+/* Change button colors based on theme */
+.btn-primary {
+    background: var(--accent-color);
+    box-shadow: 0 0 15px var(--accent-color);
+    transition: all 0.4s ease;
+}
+
+/* Specific card look for Light Mode to avoid that "Fog" look */
+.stat-card {
+    background: var(--card-bg);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(8px);
 }
