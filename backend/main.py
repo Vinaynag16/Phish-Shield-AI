@@ -34,15 +34,19 @@ def is_whitelisted(url):
     try:
         if not os.path.exists(WHITELIST_PATH):
             return False
-            
+        url = url.lower().strip()
+        if not url.startswith(('http://', 'https://')):
+            url = 'http://' + url  
+
         extracted = tldextract.extract(url)
         domain = f"{extracted.domain}.{extracted.suffix}"
         
         with open(WHITELIST_PATH, "r") as f:
             # Read lines, strip whitespace, and ignore empty lines
             whitelist = [line.strip().lower() for line in f if line.strip()]
-            
-        return any(item in url.lower() or item == domain for item in whitelist)
+        if domain in whitelist:
+            return True  
+       # return any(item in url.lower() or item == domain for item in whitelist)
     except Exception as e:
         print(f"Whitelist Error: {e}")
         return False
@@ -83,7 +87,22 @@ def get_threat_metadata(confidence_str, is_phishing , content_to_check=""):
         return "Medium", "🟠 Warning: Suspicious elements. Investigation advised."
     else:
         return "Low", "🟡 Caution: Unusual structure, but low confidence."
-
+    
+def check_typosquatting(url):
+    """Detects if a URL is trying to mimic a brand using hyphens."""
+    ext = tldextract.extract(url)
+    domain_part = ext.domain.lower()
+    
+    # Common brands phishers target
+    target_brands = ["microsoft", "onedrive", "live", "google", "paypal", "apple", "amazon"]
+    
+    # If the domain contains a brand name AND a hyphen, it's highly suspicious
+    # Example: 'onedrive-login-secure.xyz'
+    if "-" in domain_part:
+        for brand in target_brands:
+            if brand in domain_part:
+                return True
+    return False
 # --- URL ANALYZER ---
 @app.post("/predict/url")
 async def predict_url(data: URLInput):
@@ -97,6 +116,14 @@ async def predict_url(data: URLInput):
             "threat_level": "Low",
             "method": "🛡️ Whitelist Verified",
             "reason": "🟢 Verified Trusted Domain: This site is recognized as safe."
+        }
+    if check_typosquatting(url_to_test):
+        return {
+            "prediction": "phishing",
+            "score": "98%",
+            "threat_level": "High",
+            "method": "⚠️ Heuristic Guard",
+            "reason": "🔴 Critical: This URL is mimicking a known brand using suspicious patterns."
         }
 
     # 2. Run AI Engine if not whitelisted

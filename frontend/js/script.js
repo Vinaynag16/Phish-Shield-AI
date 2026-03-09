@@ -209,5 +209,37 @@ function copyResult() {
         setTimeout(() => { btn.innerText = "📋 Copy Detailed Report"; }, 2000);
     });
 }
+ /**
+ * Modern Theme Persistence Logic
+ */
+const themeCheckbox = document.getElementById('checkbox'); // Matches the modern HTML id
+const themeText = document.getElementById('theme-text');
+const currentTheme = localStorage.getItem('theme');
 
+// 1. Initial Load Check (Runs immediately)
+function initTheme() {
+    if (currentTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+        if (themeCheckbox) themeCheckbox.checked = true;
+        if (themeText) themeText.textContent = "Disable Dark Mode";
+    }
+}
+
+// 2. Handle Toggle Change
+if (themeCheckbox) {
+    themeCheckbox.addEventListener('change', (e) => {
+        if (e.target.checked) {
+            document.body.classList.add('dark-mode');
+            localStorage.setItem('theme', 'dark');
+           themeText.textContent = "Disable Dark Mode";
+        } else {
+            document.body.classList.remove('dark-mode');
+            localStorage.setItem('theme', 'light');
+            themeText.textContent = "Enable Dark Mode";
+        }
+    });
+}
+
+// Initialize on load
+initTheme();
 document.addEventListener('DOMContentLoaded', renderHistory);
