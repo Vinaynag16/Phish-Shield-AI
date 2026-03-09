@@ -1415,7 +1415,7 @@ body.dark-mode {
     background: var(--card-bg);
     border: 1px solid rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(8px);
-=======
+}
 /* Styling for the URL example inside the card */
 .url-example {
     color: #00ff88; /* The neon green from your image */
