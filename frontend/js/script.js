@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:8000";
+const API_BASE = "http://127.0.0.1:8000";
 
 /**
  * URL Scanner Logic - Upgraded for Deep Learning Engine
@@ -35,12 +35,11 @@ async function scanURL() {
     try {
         const response = await fetch(`${API_BASE}/predict/url`, {
             method: 'POST',
-            mode: 'cors',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ url: urlInput })
         });
 
-        if (!response.ok) throw new Error("Server reached but returned error");
+        if (!response.ok) throw new Error("Server Error");
         
         const data = await response.json();
         
@@ -52,7 +51,7 @@ async function scanURL() {
         addToHistory("URL", urlInput, data);
 
     } catch (error) {
-        console.error("Connection Detailed Error:", error);
+        console.error("Connection Error:", error);
         clearInterval(loadingInterval);
         title.innerText = "⚠️ Backend Offline";
         desc.innerText = "Ensure your FastAPI server is running in the terminal.";

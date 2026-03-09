@@ -52,11 +52,31 @@ def is_whitelisted(url):
         return False
 
 # --- HELPER: Threat Level Logic ---
-def get_threat_metadata(confidence_str, is_phishing):
+def get_threat_metadata(confidence_str, is_phishing , content_to_check=""):
     try:
         score = float(str(confidence_str).replace('%', ''))
     except:
         score = 0.0
+        content_to_check = content_to_check.lower() if content_to_check else ""
+       # 1. EXPANDED KEYWORD GUARD: Common phishing "hooks"
+    # Added: 'package', 'warehouse', 'delivery', 'tracking', 'link', 'update'
+    danger_words = [
+        'login', 'verify', 'account', 'password', 'click', 'bank', 
+        'urgent', 'winner', 'package', 'warehouse', 'delivery', 
+        'tracking', 'link', 'update', 'held', 'incorrect'
+    ]
+    
+    # Check if ANY danger word is in the message
+    has_danger_word = any(word in content_to_check.lower() for word in danger_words)#run
+
+    # 2. SMART SAFETY CHECK:
+    # If it's a short message but has a DANGER word, we TRUST the AI's phishing verdict.
+    if is_phishing and content_to_check and len(content_to_check.split()) < 10:
+        if not has_danger_word:
+            return "Low", "🟢 Safe: Casual conversation detected."
+        else:
+            # If AI thinks it's phish AND it has a danger word, it stays Phishing!
+            return "High", "🔴 Critical: Short message contains high-risk keywords." 
 
     if not is_phishing:
         return "Low", "🟢 Safe: Minimal risk detected."
@@ -131,10 +151,11 @@ async def predict_text(data: TextInput):
         confidence = round(np.max(prob) * 100, 2)
         
         is_phish = (prediction == 1)
-        level, advice = get_threat_metadata(confidence, is_phish)
+        level, advice = get_threat_metadata(confidence, is_phish, data.text)
+        final_verdict = "safe" if "Safe" in advice else "phishing"
         
         return {
-            "prediction": "phishing" if is_phish else "safe",
+            "prediction": final_verdict,
             "score": f"{confidence}%",
             "threat_level": level,
             "method": "🧠 NLP Neural Engine",

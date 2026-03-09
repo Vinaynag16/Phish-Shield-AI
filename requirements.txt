@@ -8,12 +8,12 @@ joblib
 tldextract
 
 # --- Version 1: Deep Learning & NLP ---
-tensorflow          # Required for LSTM/CNN Neural Networks
-transformers        # For BERT/RoBERTa text intent analysis
-torch               # Backend engine for Transformers
-tokenizers          # Fast text tokenization
+tensorflow # Required for LSTM/CNN Neural Networks
+transformers # For BERT/RoBERTa text intent analysis
+torch # Backend engine for Transformers
+tokenizers # Fast text tokenization
 
 # --- Version 1: Advanced Feature Engineering ---
-python-whois        # To check Domain Age and Registration info
-requests            # For live API lookups (PhishTank/OpenPhish)
-matplotlib          # For visualizing training accuracy/loss
+python-whois # To check Domain Age and Registration info
+requests # For live API lookups (PhishTank/OpenPhish)
+matplotlib # For visualizing training accuracy/loss // this my requirement.txt file

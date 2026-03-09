@@ -1415,4 +1415,318 @@ body.dark-mode {
     background: var(--card-bg);
     border: 1px solid rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(8px);
+=======
+/* Styling for the URL example inside the card */
+.url-example {
+    color: #00ff88; /* The neon green from your image */
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    font-size: 0.95rem; /* Adjust this to make it smaller or larger */
+    background: rgba(0, 255, 136, 0.1); /* Subtle green glow background */
+    padding: 2px 6px;
+    border-radius: 4px;
+    display: inline-block;
+    margin: 0 2px;
 }
+
+/* Accuracy Bar Styling (to match your screenshot) */
+.accuracy-bar {
+    width: 100%;
+    background: #222;
+    border-radius: 50px;
+    margin-top: 15px;
+    height: 12px; /* Slimmer bar */
+    overflow: hidden;
+}
+
+.fill {
+    height: 100%;
+    background: linear-gradient(90deg, #00ff88, #00bd65);
+    color: #000;
+    font-size: 0.7rem;
+    font-weight: bold;
+    text-align: center;
+    line-height: 12px;
+}
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.card-header i {
+    font-size: 2rem;
+    color: var(--accent-color);
+}
+
+.accuracy-container {
+    margin-top: 25px;
+}
+
+.accuracy-container .label {
+    font-size: 0.8rem;
+    color: #888;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.pulse {
+    animation: pulse-animation 2s infinite;
+}
+
+@keyframes pulse-animation {
+    0% { box-shadow: 0 0 0 0px rgba(0, 255, 136, 0.4); }
+    100% { box-shadow: 0 0 0 10px rgba(0, 255, 136, 0); }
+}
+/* Card Layout Upgrades */
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 30px;
+    padding: 20px;
+}
+
+.detail-card {
+    background: #111; /* Darker background to match SOC style */
+    border: 1px solid #222;
+    border-radius: 12px;
+    padding: 30px;
+    transition: transform 0.3s ease;
+}
+
+.card-top {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.card-icon {
+    font-size: 1.8rem;
+    color: #00ff88;
+}
+
+/* URL Example Styling */
+.url-example {
+    background: rgba(0, 255, 136, 0.15);
+    color: #00ff88;
+    font-family: 'monospace';
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+/* Accuracy Bar */
+.engine-info {
+    margin-top: 25px;
+}
+
+.engine-label {
+    font-size: 0.8rem;
+    color: #666;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.accuracy-bar {
+    height: 10px;
+    background: #222;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.fill {
+    height: 100%;
+    background: #00ff88;
+    box-shadow: 0 0 10px #00ff88;
+    font-size: 0; /* Hide text inside thin bar */
+}
+
+/* Database Info Styling */
+.database-stats {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 20px;
+    background: rgba(0, 255, 136, 0.05);
+    padding: 10px 15px;
+    border-radius: 8px;
+    width: fit-content;
+}
+
+.db-icon {
+    font-size: 2rem;
+    color: #00ff88;
+}
+
+.db-count {
+    color: #00ff88;
+    font-weight: bold;
+}
+/* Container for the label */
+.engine-label {
+    display: block;
+    font-size: 0.75rem;
+    color: #888;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* The Background Track */
+.accuracy-bar {
+    width: 100%;
+    height: 24px; /* Increased height for text visibility */
+    background: #1a1a1a; /* Darker track */
+    border-radius: 4px;
+    border: 1px solid #333;
+    overflow: hidden;
+    position: relative;
+}
+
+/* The Progress Fill */
+.fill {
+    height: 100%;
+    background: #00ff88; /* Your neon green */
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Centers the text inside the fill */
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
+    transition: width 1.2s cubic-bezier(0.1, 0.5, 0.5, 1);
+}
+
+/* The Percentage Text */
+.percentage-text {
+    color: #000; /* High-contrast black text on green background */
+    font-size: 0.85rem;
+    font-weight: 900;
+    white-space: nowrap;
+}
+.engine-info {
+    margin-top: 20px;
+    width: 100%;
+}
+
+.engine-label {
+    font-size: 0.7rem;
+    color: #888;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.accuracy-bar {
+    width: 100%;
+    height: 26px; /* Increased height to prevent clipping */
+    background: #111;
+    border-radius: 4px;
+    border: 1px solid #333;
+    overflow: hidden;
+    position: relative;
+}
+
+.fill {
+    height: 100%;
+    background: #00ff88;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Ensures text is perfectly centered */
+    transition: width 1.5s ease-in-out;
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
+}
+
+.percentage-text {
+    color: #000; /* Black text for maximum contrast on green */
+    font-size: 0.85rem;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+    white-space: nowrap; /* Prevents text from wrapping/breaking */
+}
+.accuracy-bar {
+    width: 100%;
+    height: 28px; /* Slightly taller for better HUD look */
+    background: #111;
+    border-radius: 6px;
+    border: 1px solid #333;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+.fill {
+    height: 100%;
+    background: #00ff88;
+    display: flex;
+    align-items: center;
+    padding-left: 15px; /* Keeps text from touching the left edge */
+    transition: width 1.5s ease-in-out;
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+}
+
+.percentage-text {
+    color: #000; /* Deep black for contrast */
+    font-size: 0.8rem;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+.accuracy-bar {
+    width: 100%;
+    height: 28px;
+    background: #111;
+    border-radius: 4px;
+    border: 1px solid #333;
+    overflow: hidden;
+    position: relative; /* Allows text to be positioned relative to the bar */
+}
+
+.fill {
+    height: 100%;
+    background: #00ff88;
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
+    transition: width 1.5s ease-in-out;
+}
+
+.percentage-text {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    line-height: 28px; /* Matches bar height to center vertically */
+    color: #fff; /* White text for better contrast if it overlaps the dark track */
+    mix-blend-mode: difference; /* Smart trick: turns black on green, white on dark */
+    font-size: 0.8rem;
+    font-weight: 900;
+    pointer-events: none;
+}
+.accuracy-bar {
+    width: 100%;
+    height: 30px; /* Slightly thicker */
+    background: #111;
+    border-radius: 4px;
+    border: 1px solid #333;
+    position: relative;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+.fill {
+    height: 100%;
+    background: #00ff88;
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
+    transition: width 1.5s ease-in-out;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.percentage-text {
+    position: relative; /* Sits on top of the fill */
+    z-index: 2;
+    width: 100%;
+    text-align: center;
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 900;
+    mix-blend-mode: difference; /* Critical: makes text visible on any color */
+}
+ 
