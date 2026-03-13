@@ -4,6 +4,7 @@ import tldextract
 import numpy as np
 import joblib
 import sys
+import re
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
@@ -92,16 +93,19 @@ def check_typosquatting(url):
     """Detects if a URL is trying to mimic a brand using hyphens."""
     ext = tldextract.extract(url)
     domain_part = ext.domain.lower()
-    
+    visual_swaps = [(r'0', 'o'), (r'1', 'l'), (r'rn', 'm'), (r'vv', 'w')]
+    normalized_domain = domain_part
+    for pattern, replacement in visual_swaps:
+        normalized_domain = re.sub(pattern, replacement, normalized_domain)
     # Common brands phishers target
     target_brands = ["microsoft", "onedrive", "live", "google", "paypal", "apple", "amazon"]
     
+    if normalized_domain in target_brands and domain_part not in target_brands:
+        return True
     # If the domain contains a brand name AND a hyphen, it's highly suspicious
     # Example: 'onedrive-login-secure.xyz'
-    if "-" in domain_part:
-        for brand in target_brands:
-            if brand in domain_part:
-                return True
+    if "-" in domain_part and any(brand in domain_part for brand in target_brands):
+        return True
     return False
 # --- URL ANALYZER ---
 @app.post("/predict/url")
@@ -129,7 +133,7 @@ async def predict_url(data: URLInput):
     # 2. Run AI Engine if not whitelisted
     try:
         result = url_engine.predict_url(url_to_test)
-        is_phish = result["status"] == "PHISHING"
+        is_phish = result["status"] == "PHISHING" or float(result["confidence"].replace('%','')) > 45
         level, advice = get_threat_metadata(result["confidence"], is_phish)
         
         return {
