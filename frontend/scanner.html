@@ -10,23 +10,37 @@
 <body>
 
     <nav class="navbar">
-        <div class="logo">
-            <i class="fas fa-shield-alt logo-icon"></i>
-            PHISH-SHIELD <span>AI</span>
-        </div>
-        <ul class="nav-links">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="scanner.html" class="active">Scanner</a></li>
-            <li><a href="features.html">Features</a></li>
-            <li><a href="docs.html">Docs</a></li>
-        </ul>
-    </nav>
+
+<div class="nav-left">
+<h2 class="logo">🛡️ PHISH-SHIELD-AI v2.0</h2>
+</div>
+
+<div class="nav-right">
+
+<label class="theme-switch">
+<input type="checkbox" id="checkbox">
+<span class="slider"></span>
+</label>
+
+<span class="theme-text">Dark Mode</span>
+
+<a href="index.html">Home</a>
+<a href="scanner.html">Scanner</a>
+<a href="features.html">Features</a>
+<a href="docs.html">Docs</a>
+
+</div>
+
+</nav>
 
     <div class="main-wrapper">
         <div class="container">
-            <header>
-                <h1>🛡️ PhishShield <span class="ai-tag">AI</span></h1>
-                <p>Advanced Real-time Threat Detection</p>
+            <header class="scanner-header">
+             <div class="scanner-title">
+            <i class="fas fa-shield-alt"></i>
+            <h1>PhishShield <span class="ai-tag">AI</span></h1>
+            <span class ="scanner-subtitle">Advanced Real-time Threat Detection</span>
+             </div>
             </header>
 
             <div class="scanner-box">
@@ -38,7 +52,6 @@
                 <div id="url-tab" class="tab-content">
                     <input type="text" id="url-input" placeholder="Paste link here...">
                     <button onclick="scanURL()" class="scan-btn" id="url-btn">
-                        <span id="url-loader" class="loader hidden"></span> 
                         <span id="url-btn-text">Analyze Link</span>
                     </button>
                 </div>
@@ -46,43 +59,93 @@
                 <div id="text-tab" class="tab-content" style="display:none;">
                     <textarea id="text-input" placeholder="Paste suspicious text here..."></textarea>
                     <button onclick="scanText()" class="scan-btn" id="text-btn">
-                        <span id="text-loader" class="loader hidden"></span> 
                         <span id="text-btn-text">Analyze Message</span>
                     </button>
                 </div>
 
-                <div id="result-container" class="result-box hidden">
-                    <div id="status-icon"></div>
-                    <h2 id="result-title">Result</h2>
-                    <p id="result-desc"></p>
-                    <div id="confidence-bar"></div>
-                    
-                    <div class="result-actions" style="margin-top: 20px;">
-                    <button id="copy-btn" onclick="copyResult()" class="copy-btn">
-                    <i class="fas fa-copy"></i> Copy Detailed Report
-                       </button>
+                <div id="scanning-radar" class="scanning-container hidden">
+                    <div class="radar-circle">
+                        <div class="radar-sweep"></div>
+                        <div class="radar-dot"></div>
+                    </div>
+                    <div class="pulse-ring" style="animation-delay: 0s"></div>
+                    <div class="pulse-ring" style="animation-delay: 0.5s"></div>
+                    <div class="status-text-wrapper">
+                        <p id="dynamic-status">Initializing Neural Engine...</p>
                     </div>
                 </div>
+
+                <div id="result-container" class="result-box hidden">
+                    <div class="glass-header">
+                        <div id="status-icon"></div>
+                        <h2 id="result-title">Analysis Complete</h2>
+                    </div>
+
+                    <div class="main-result-area">
+                        <p id="result-desc"></p>
+                        <div id="confidence-bar-wrapper" class="accuracy-bar">
+                            <div id="confidence-bar" class="fill"></div>
+                            <span class="percentage-text">0% Accuracy</span>
+                        </div>
+                    </div>
+
+                    <div class="forensic-grid">
+                        <div class="whois-card">
+                            <h5><i class="fas fa-fingerprint"></i> WHOIS FORENSICS</h5>
+                            <p><strong>Registrar:</strong> <span id="whois-registrar">N/A</span></p>
+                            <p><strong>Age/Created:</strong> <span id="whois-created">N/A</span></p>
+                            <p><strong>Domain Age:</strong>
+                            <span id="whois-age">Unknown</span></p>
+                            <details class="raw-details">
+                                <summary>View Raw Registry Data</summary>
+                                <pre id="whois-raw" class="raw-box"></pre>
+                            </details>
+                        </div>
+                    </div>
+
+                    <div class="analysis-details">
+                        <h4><i class="fas fa-microchip"></i> Engine Breakdown</h4>
+                        <div class="analysis-grid">
+                            <div class="analysis-item">
+                                <div class="label-row"><span>Domain Integrity</span><span id="val-domain">0%</span></div>
+                                <div class="mini-bar"><div id="bar-domain" class="fill"></div></div>
+                            </div>
+                            <div class="analysis-item">
+                                <div class="label-row"><span>Structural Entropy</span><span id="val-entropy">0%</span></div>
+                                <div class="mini-bar"><div id="bar-entropy" class="fill"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="result-actions">
+                        <button id="copy-btn" onclick="copyResult()" class="copy-btn">
+                            <i class="fas fa-copy"></i> Copy Text Report
+                        </button>
+                        <button onclick="downloadReport()" class="download-btn">
+                            <i class="fas fa-file-download"></i> Download PDF/TXT Report
+                        </button>
+                    </div>
+                </div>
+<div id="history-section" class="history-container hidden">
+                <hr class="divider">
+               <div class="section-header">
+<h2>📋 Recent <span class="text-gradient">Scan History</span></h2>
+</div>
+                <table id="history-table">
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Target</th>
+                            <th>Result</th>
+                            <th>Threat Level</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-body"></tbody>
+                </table>
+                <button onclick="clearHistory()" class="clear-btn">Clear History</button>
             </div>
         </div>
     </div>
-    //History section
-    <div id="history-section" class="hidden">
-    <hr>
-    <h3>📋 Recent Scan History</h3>
-    <table id="history-table">
-        <thead>
-            <tr>
-                <th>Type</th>
-                <th>Target</th>
-                <th>Result</th>
-                <th>Confidence</th>
-            </tr>
-        </thead>
-        <tbody id="history-body"></tbody>
-    </table>
-    <button onclick="clearHistory()" class="clear-btn">Clear History</button>
-</div>
 
     <script src="js/script.js"></script>
 </body>

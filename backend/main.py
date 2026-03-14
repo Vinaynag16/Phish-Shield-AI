@@ -4,171 +4,294 @@ import tldextract
 import numpy as np
 import joblib
 import sys
+import whois
 import re
-from fastapi import FastAPI, HTTPException
+from datetime import datetime, UTC
+from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 
-# --- NEW: Import your LSTM Engine ---
+# --- IMPORT LSTM ENGINE ---
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from models1.predict import PhishShieldInference
 
-# --- CONFIGURATION ---
-app = FastAPI(title="Phish-Shield AI Engine (v2.0)")
+
+# ---------------- CONFIG ----------------
+app = FastAPI(title="Phish-Shield AI Engine v2.0")
+
 BASE_DIR = r"C:\Users\nagav\Desktop\phishing project"
 MODEL_DIR = os.path.join(BASE_DIR, "models")
 WHITELIST_PATH = os.path.join(BASE_DIR, "backend", "whitelist.txt")
 
-# --- ENGINE INITIALIZATION ---
+
+# ---------------- LOAD MODELS ----------------
 text_model = joblib.load(os.path.join(MODEL_DIR, "text_model.pkl"))
+
 url_engine = PhishShieldInference(
-    model_path=os.path.join(BASE_DIR, 'models1', 'phishshield_lstm.h5'),
-    tokenizer_path=os.path.join(BASE_DIR, 'models1', 'url_tokenizer.pkl')
+    model_path=os.path.join(BASE_DIR, "models1", "phishshield_lstm.h5"),
+    tokenizer_path=os.path.join(BASE_DIR, "models1", "url_tokenizer.pkl")
 )
 
-class URLInput(BaseModel): url: str
-class TextInput(BaseModel): text: str
 
-# --- HELPER: Whitelist Loader ---
+# ---------------- INPUT MODELS ----------------
+class URLInput(BaseModel):
+    url: str
+
+
+class TextInput(BaseModel):
+    text: str
+
+
+# ---------------- WHITELIST ----------------
 def is_whitelisted(url):
-    """Checks if the domain or URL exists in whitelist.txt"""
     try:
         if not os.path.exists(WHITELIST_PATH):
             return False
-        url = url.lower().strip()
-        if not url.startswith(('http://', 'https://')):
-            url = 'http://' + url  
 
-        extracted = tldextract.extract(url)
-        domain = f"{extracted.domain}.{extracted.suffix}"
-        
+        url = url.lower().strip()
+
+        if not url.startswith(("http://", "https://")):
+            url = "http://" + url
+
+        ext = tldextract.extract(url)
+        domain = f"{ext.domain}.{ext.suffix}"
+
         with open(WHITELIST_PATH, "r") as f:
-            # Read lines, strip whitespace, and ignore empty lines
             whitelist = [line.strip().lower() for line in f if line.strip()]
-        if domain in whitelist:
-            return True  
-       # return any(item in url.lower() or item == domain for item in whitelist)
+
+        return domain in whitelist
+
     except Exception as e:
-        print(f"Whitelist Error: {e}")
+        print("Whitelist Error:", e)
         return False
 
-# --- HELPER: Threat Level Logic ---
-def get_threat_metadata(confidence_str, is_phishing , content_to_check=""):
-    try:
-        score = float(str(confidence_str).replace('%', ''))
-    except:
-        score = 0.0
-        content_to_check = content_to_check.lower() if content_to_check else ""
-       # 1. EXPANDED KEYWORD GUARD: Common phishing "hooks"
-    # Added: 'package', 'warehouse', 'delivery', 'tracking', 'link', 'update'
-    danger_words = [
-        'login', 'verify', 'account', 'password', 'click', 'bank', 
-        'urgent', 'winner', 'package', 'warehouse', 'delivery', 
-        'tracking', 'link', 'update', 'held', 'incorrect'
-    ]
-    
-    # Check if ANY danger word is in the message
-    has_danger_word = any(word in content_to_check.lower() for word in danger_words)#run
 
-    # 2. SMART SAFETY CHECK:
-    # If it's a short message but has a DANGER word, we TRUST the AI's phishing verdict.
-    if is_phishing and content_to_check and len(content_to_check.split()) < 10:
-        if not has_danger_word:
-            return "Low", "🟢 Safe: Casual conversation detected."
-        else:
-            # If AI thinks it's phish AND it has a danger word, it stays Phishing!
-            return "High", "🔴 Critical: Short message contains high-risk keywords." 
+# ---------------- THREAT LOGIC ----------------
+def get_threat_metadata(confidence, is_phishing):
+
+    try:
+        score = float(str(confidence).replace("%", ""))
+    except:
+        score = 0
 
     if not is_phishing:
         return "Low", "🟢 Safe: Minimal risk detected."
-    
+
     if score > 90:
         return "High", "🔴 Critical: Highly malicious patterns found."
     elif score > 70:
-        return "Medium", "🟠 Warning: Suspicious elements. Investigation advised."
+        return "Medium", "🟠 Warning: Suspicious elements detected."
     else:
-        return "Low", "🟡 Caution: Unusual structure, but low confidence."
-    
+        return "Low", "🟡 Low confidence phishing detection."
+
+
+# ---------------- TYPOSQUATTING ----------------
 def check_typosquatting(url):
-    """Detects if a URL is trying to mimic a brand using hyphens."""
+
     ext = tldextract.extract(url)
-    domain_part = ext.domain.lower()
-    visual_swaps = [(r'0', 'o'), (r'1', 'l'), (r'rn', 'm'), (r'vv', 'w')]
-    normalized_domain = domain_part
-    for pattern, replacement in visual_swaps:
-        normalized_domain = re.sub(pattern, replacement, normalized_domain)
-    # Common brands phishers target
-    target_brands = ["microsoft", "onedrive", "live", "google", "paypal", "apple", "amazon"]
-    
-    if normalized_domain in target_brands and domain_part not in target_brands:
+    domain = ext.domain.lower()
+
+    visual_swaps = [
+        ("0", "o"),
+        ("1", "l"),
+        ("rn", "m"),
+        ("vv", "w")
+    ]
+
+    normalized = domain
+
+    for pattern, repl in visual_swaps:
+        normalized = normalized.replace(pattern, repl)
+
+    brands = [
+        "google", "paypal", "amazon",
+        "apple", "microsoft", "onedrive", "live"
+    ]
+
+    if normalized in brands and domain not in brands:
         return True
-    # If the domain contains a brand name AND a hyphen, it's highly suspicious
-    # Example: 'onedrive-login-secure.xyz'
-    if "-" in domain_part and any(brand in domain_part for brand in target_brands):
+
+    if "-" in domain and any(b in domain for b in brands):
         return True
+
     return False
-# --- URL ANALYZER ---
+
+
+# ---------------- SUSPICIOUS TLD ----------------
+def suspicious_tld(domain):
+
+    risky_tlds = [
+        "xyz", "top", "site", "online",
+        "store", "live", "info", "club"
+    ]
+
+    ext = tldextract.extract(domain)
+    return ext.suffix in risky_tlds
+
+
+# ---------------- SUBDOMAIN ABUSE ----------------
+def excessive_subdomains(url):
+
+    ext = tldextract.extract(url)
+
+    if not ext.subdomain:
+        return False
+
+    subdomains = ext.subdomain.split(".")
+    return len(subdomains) >= 3
+
+
+# ---------------- URL ANALYZER ----------------
 @app.post("/predict/url")
 async def predict_url(data: URLInput):
+
     url_to_test = data.url.lower().strip()
-    
-    # 1. Check Whitelist First
-    if is_whitelisted(url_to_test):
-        return {
-            "prediction": "safe",
-            "score": "100%",
-            "threat_level": "Low",
-            "method": "🛡️ Whitelist Verified",
-            "reason": "🟢 Verified Trusted Domain: This site is recognized as safe."
-        }
+
+    is_white = is_whitelisted(url_to_test)
+
+    # -------- TYPOSQUATTING --------
     if check_typosquatting(url_to_test):
         return {
             "prediction": "phishing",
             "score": "98%",
             "threat_level": "High",
             "method": "⚠️ Heuristic Guard",
-            "reason": "🔴 Critical: This URL is mimicking a known brand using suspicious patterns."
+            "reason": "🔴 Brand impersonation detected"
         }
 
-    # 2. Run AI Engine if not whitelisted
+    # -------- WHOIS LOOKUP --------
     try:
-        result = url_engine.predict_url(url_to_test)
-        is_phish = result["status"] == "PHISHING" or float(result["confidence"].replace('%','')) > 45
-        level, advice = get_threat_metadata(result["confidence"], is_phish)
-        
-        return {
-            "prediction": result["status"].lower(),
-            "score": result["confidence"],
-            "threat_level": level,
-            "method": "🧠 Deep Learning (LSTM)",
-            "reason": advice
-        }
-    except Exception as e:
-        return {"prediction": "Error", "reason": f"❌ Analysis failed: {e}"}
 
-# --- TEXT ANALYZER ---
+        ext = tldextract.extract(url_to_test)
+        domain = f"{ext.domain}.{ext.suffix}"
+
+        w = whois.whois(domain)
+
+        creation = w.creation_date
+        expiry = w.expiration_date
+
+        if isinstance(creation, list):
+            creation = creation[0]
+
+        if isinstance(expiry, list):
+            expiry = expiry[0]
+
+        domain_age = "Unknown"
+
+        if creation:
+
+            if hasattr(creation, "tzinfo") and creation.tzinfo is not None:
+                creation = creation.replace(tzinfo=None)
+
+            today = datetime.now(UTC).replace(tzinfo=None)
+
+            age_days = (today - creation).days
+
+            if age_days < 30:
+                domain_age = f"{age_days} days ⚠️ (Very New Domain)"
+            elif age_days < 180:
+                domain_age = f"{age_days} days (Recently Registered)"
+            else:
+                domain_age = f"{age_days} days"
+
+        whois_data = {
+            "registrar": w.registrar or "Unknown",
+            "creation_date": str(creation) if creation else "Unknown",
+            "expiry_date": str(expiry) if expiry else "Unknown",
+            "domain_age": domain_age,
+            "raw_text": str(w)[:800]
+        }
+
+    except Exception:
+
+        whois_data = {
+            "registrar": "Hidden/Unknown ⚠️",
+            "creation_date": "Unavailable",
+            "expiry_date": "Unavailable",
+            "domain_age": "Unavailable ⚠️ (Possible phishing or new domain)",
+            "raw_text": "Domain registry information is hidden or unavailable."
+        }
+
+    # -------- SUBDOMAIN SIGNAL --------
+    subdomain_flag = ""
+
+    if excessive_subdomains(url_to_test):
+        subdomain_flag = "⚠️ Excessive subdomains detected"
+
+    # -------- AI MODEL / WHITELIST --------
+    if is_white:
+
+        result = {
+            "status": "SAFE",
+            "confidence": "100%"
+        }
+
+        is_phish = False
+
+    else:
+
+        result = url_engine.predict_url(url_to_test)
+
+        is_phish = (
+            result["status"] == "PHISHING"
+            or float(result["confidence"].replace("%", "")) > 45
+        )
+
+    level, advice = get_threat_metadata(result["confidence"], is_phish)
+
+    # -------- TLD SIGNAL --------
+    tld_flag = ""
+
+    if suspicious_tld(url_to_test):
+        print("⚠️ Suspicious TLD detected")
+        tld_flag = "⚠️ Suspicious TLD detected"
+
+    return {
+        "prediction": result["status"].lower(),
+        "score": result["confidence"],
+        "threat_level": level,
+        "method": "🛡️ Whitelist Verified" if is_white else "🧠 Deep Learning (LSTM)",
+        "reason": advice,
+        "tld_warning": tld_flag,
+        "subdomain_warning": subdomain_flag,
+        "whois": whois_data
+    }
+
+
+# ---------------- TEXT ANALYZER ----------------
 @app.post("/predict/text")
 async def predict_text(data: TextInput):
+
     try:
+
         prediction = text_model.predict([data.text])[0]
         prob = text_model.predict_proba([data.text])[0]
+
         confidence = round(np.max(prob) * 100, 2)
-        
-        is_phish = (prediction == 1)
-        level, advice = get_threat_metadata(confidence, is_phish, data.text)
-        final_verdict = "safe" if "Safe" in advice else "phishing"
-        
+
+        is_phish = prediction == 1
+
+        level, advice = get_threat_metadata(confidence, is_phish)
+
+        verdict = "phishing" if is_phish else "safe"
+
         return {
-            "prediction": final_verdict,
+            "prediction": verdict,
             "score": f"{confidence}%",
             "threat_level": level,
             "method": "🧠 NLP Neural Engine",
             "reason": advice
         }
-    except Exception:
-        return {"prediction": "Error", "reason": "⚠️ NLP Engine error."}
 
-# --- MIDDLEWARE ---
+    except Exception:
+
+        return {
+            "prediction": "Error",
+            "reason": "⚠️ NLP Engine error"
+        }
+
+
+# ---------------- CORS ----------------
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -177,5 +300,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+# ---------------- RUN SERVER ----------------
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8000)

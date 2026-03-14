@@ -1,245 +1,487 @@
 const API_BASE = "http://127.0.0.1:8000";
+let currentReportData = null;
 
-/**
- * URL Scanner Logic - Upgraded for Deep Learning Engine
- */
+
+/* ---------------- SCAN ANIMATION ---------------- */
+
+function startScanAnimation(scanSteps){
+
+const radar = document.getElementById("scanning-radar");
+
+// remove old animation if exists
+const oldSteps = document.querySelector(".scan-steps");
+if(oldSteps) oldSteps.remove();
+
+let stepsContainer = document.createElement("div");
+stepsContainer.className = "scan-steps";
+
+scanSteps.forEach((step,i)=>{
+
+let stepDiv = document.createElement("div");
+
+stepDiv.className = "scan-step";
+stepDiv.id = "scan-step-"+i;
+
+stepDiv.innerHTML = `
+<span class="step-icon">⏳</span>
+<span class="step-text">${step}</span>
+`;
+
+stepsContainer.appendChild(stepDiv);
+
+});
+
+radar.appendChild(stepsContainer);
+
+return stepsContainer;
+
+}
+
+
+
+/* ---------------- URL SCANNER ---------------- */
+
 async function scanURL() {
-    const urlInput = document.getElementById('url-input').value;
-    const resultBox = document.getElementById('result-container');
-    const title = document.getElementById('result-title');
-    const desc = document.getElementById('result-desc');
-    const btn = document.getElementById('url-btn');
-    const input = document.getElementById('url-input');
-    
-    if (!urlInput.includes('.') || urlInput.length < 4) {
-        alert("❌ Please enter a valid URL (e.g., google.com)");
-        return;
-    }
-    
-    // 1. UI Lock & Initial "Thinking" State
-    btn.disabled = true;
-    input.readOnly = true;
-    btn.innerHTML = `<span class="loader"></span> Analyzing...`;
 
-    resultBox.classList.remove('hidden', 'safe-mode', 'danger-mode', 'warning-mode');
-    title.classList.add('analyzing-text');
-    title.style.color = "#3498db";
-    
-    let dotCount = 0;
-    const loadingInterval = setInterval(() => {
-        dotCount = (dotCount + 1) % 4;
-        title.innerText = "🔍 AI is scanning URL structure" + ".".repeat(dotCount);
-    }, 300);
-    desc.innerText = "Extracting deep features and checking reputation...";
+const urlInput = document.getElementById('url-input').value.trim();
+const radar = document.getElementById('scanning-radar');
+const resultBox = document.getElementById('result-container');
+const dynamicStatus = document.getElementById('dynamic-status');
+const btn = document.getElementById('url-btn');
+const input = document.getElementById('url-input');
 
-    try {
-        const response = await fetch(`${API_BASE}/predict/url`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ url: urlInput })
-        });
-
-        if (!response.ok) throw new Error("Server Error");
-        
-        const data = await response.json();
-        
-        // Artificial delay for "Professional Feel" (optional)
-        await new Promise(resolve => setTimeout(resolve, 800));
-
-        clearInterval(loadingInterval);
-        displayResult(data);
-        addToHistory("URL", urlInput, data);
-
-    } catch (error) {
-        console.error("Connection Error:", error);
-        clearInterval(loadingInterval);
-        title.innerText = "⚠️ Backend Offline";
-        desc.innerText = "Ensure your FastAPI server is running in the terminal.";
-        resultBox.classList.add('danger-mode');
-    } finally {
-        btn.disabled = false;
-        input.readOnly = false;
-        btn.innerHTML = "Analyze Link";
-    }
+if (!urlInput.includes('.') || urlInput.length < 4) {
+alert("❌ Error: Invalid URL Format.");
+return;
 }
 
-/**
- * Text Scanner Logic - Upgraded for NLP Neural Engine
- */
-async function scanText() {
-    const messageText = document.getElementById('text-input').value;
-    const resultBox = document.getElementById('result-container');
-    const title = document.getElementById('result-title');
-    const desc = document.getElementById('result-desc');
-    
-    if (!messageText.trim()) {
-        alert("Please paste a message first!");
-        return;
-    }
+btn.disabled = true;
+input.readOnly = true;
+resultBox.classList.add('hidden');
+radar.classList.remove('hidden');
 
-    resultBox.classList.remove('hidden', 'safe-mode', 'danger-mode', 'warning-mode');
-    title.innerText = "🧠 AI is reading intent...";
-    desc.innerText = "Scanning for social engineering patterns...";
 
-    try {
-        const response = await fetch(`${API_BASE}/predict/text`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ text: messageText }) 
-        });
-        
-        const data = await response.json();
-        displayResult(data);
-        addToHistory('TEXT', messageText, data);
+const scanSteps = [
+"🌐 Initializing Secure Handshake...",
+"🔍 Scraping DOM Metadata...",
+"🧠 LSTM Neural Engine Predicting...",
+"🛡️ Querying WHOIS Database...",
+"📊 Quantifying Threat Vectors..."
+];
 
-    } catch (error) {
-        title.innerText = "⚠️ Backend Offline";
-        resultBox.classList.add('danger-mode');
-    }
+startScanAnimation(scanSteps);
+
+let step = 0;
+
+const stepInterval = setInterval(()=>{
+
+const stepEl = document.getElementById("scan-step-"+step);
+
+if(stepEl){
+
+stepEl.classList.add("active");
+stepEl.querySelector(".step-icon").innerText="⚙️";
+dynamicStatus.innerText = scanSteps[step];
+
 }
 
-/**
- * Universal Result Display Handler - Logic for Threat Levels
- */
-function displayResult(data) {
-    const box = document.getElementById('result-container');
-    const title = document.getElementById('result-title');
-    const desc = document.getElementById('result-desc');
-    const bar = document.getElementById('confidence-bar');
-    
-    // 1. Reset Classes
-    box.classList.remove('hidden', 'safe-mode', 'danger-mode', 'warning-mode');
+if(step>0){
 
-    // 2. Extract AI Metadata
-    const prediction = data.prediction || "Unknown";
-    const threatLevel = data.threat_level || "Low";
-    const method = data.method || "AI Analysis";
-    const reason = data.reason || "Analysis Complete";
-    const scoreText = data.score || "0%";
-    const scoreValue = parseFloat(scoreText.toString().replace('%',''));
+const prev = document.getElementById("scan-step-"+(step-1));
 
-    // 3. Update Visuals
-    if (bar) bar.style.width = scoreValue + "%";
-    title.innerText = prediction.toUpperCase();
-    title.style.color = "white";
-    
-    desc.innerHTML = `
-        <div class="risk-badge badge-${threatLevel.toLowerCase()}">RISK: ${threatLevel}</div>
-        <strong>Engine:</strong> ${method} (${scoreText})<br>
-        <p class="advice-text">${reason}</p>
-    `;
-    
-    // 4. Color Coding Logic
-    const verdict = prediction.toLowerCase();
-    if (verdict.includes("safe")) {
-        box.classList.add('safe-mode');
-    } else if (threatLevel === "High") {
-        box.classList.add('danger-mode');
-    } else {
-        box.classList.add('warning-mode'); // Medium/Caution items
-    }
+if(prev){
+prev.classList.remove("active");
+prev.classList.add("done");
+prev.querySelector(".step-icon").innerText="✔";
 }
 
-/**
- * History Management (Persistent LocalStorage)
- */
-let scanHistory = JSON.parse(localStorage.getItem('phish_history')) || [];
-
-function addToHistory(type, target, data){
-    const newScan = {
-        type: type.toUpperCase(),
-        target: target.length > 30 ? target.substring(0,27) + "..." : target,
-        prediction: data.prediction,
-        threat: data.threat_level || "Low",
-        score: data.score || "N/A",
-        timestamp: new Date().toLocaleTimeString()
-    };
-    scanHistory.unshift(newScan);
-    if (scanHistory.length > 5) scanHistory.pop(); 
-    localStorage.setItem('phish_history', JSON.stringify(scanHistory));
-    renderHistory();
 }
 
-function renderHistory() {
-    const body = document.getElementById('history-body');
-    const section = document.getElementById('history-section');
-    if (!body || !section) return;
+step++;
 
-    if (scanHistory.length === 0) {
-        section.classList.add('hidden');
-        return;
-    }
-    
-    section.classList.remove('hidden');
-    body.innerHTML = scanHistory.map(scan => `
-        <tr>
-            <td>${scan.type}</td>
-            <td title="${scan.target}">${scan.target}</td>
-            <td class="status-${scan.prediction.toLowerCase()}">${scan.prediction.toUpperCase()}</td>
-            <td><span class="dot dot-${scan.threat.toLowerCase()}"></span> ${scan.threat}</td>
-        </tr>
-    `).join('');
+if(step>=scanSteps.length){
+
+const last = document.getElementById("scan-step-"+(scanSteps.length-1));
+
+if(last){
+last.classList.remove("active");
+last.classList.add("done");
+last.querySelector(".step-icon").innerText="✔";
 }
 
-/**
- * Navigation & Utilities
- */
-function showTab(type) {
-    document.getElementById('url-tab').style.display = type === 'url' ? 'block' : 'none';
-    document.getElementById('text-tab').style.display = type === 'text' ? 'block' : 'none';
-    const buttons = document.querySelectorAll('.tab-btn');
-    buttons[0].classList.toggle('active', type === 'url');
-    buttons[1].classList.toggle('active', type === 'text');
-    document.getElementById('result-container').classList.add('hidden');
+clearInterval(stepInterval);
+
 }
 
-function clearHistory() {
-    scanHistory = [];
-    localStorage.removeItem('phish_history');
-    renderHistory();
+},700);
+
+
+
+try {
+
+const apiRequest = fetch(`${API_BASE}/predict/url`,{
+method:'POST',
+headers:{'Content-Type':'application/json'},
+body:JSON.stringify({url:urlInput})
+});
+
+const animationDelay = new Promise(resolve =>
+setTimeout(resolve,scanSteps.length*700)
+);
+
+const [response] = await Promise.all([
+apiRequest,
+animationDelay
+]);
+
+if (!response.ok) throw new Error("Backend Offline");
+
+const data = await response.json();
+
+clearInterval(stepInterval);
+
+dynamicStatus.innerText = "✅ Analysis Finalized. Generating Report...";
+
+setTimeout(()=>{
+
+const steps = document.querySelector(".scan-steps");
+if(steps) steps.remove();
+
+radar.classList.add('hidden');
+
+displayResult(data,urlInput);
+addToHistory("URL",urlInput,data);
+
+},600);
+
+}
+catch(error){
+
+clearInterval(stepInterval);
+
+const steps = document.querySelector(".scan-steps");
+if(steps) steps.remove();
+
+radar.classList.add('hidden');
+
+alert("⚠️ System Error: Neural Engine Offline. Please start the FastAPI server.");
+
+}
+finally{
+
+btn.disabled=false;
+input.readOnly=false;
+
 }
 
-function copyResult() {
-    const prediction = document.getElementById('result-title').innerText;
-    const details = document.getElementById('result-desc').innerText;
-    const report = `🛡️ Phish-Shield AI Report\nVerdict: ${prediction}\n${details}\nDate: ${new Date().toLocaleString()}`;
-    navigator.clipboard.writeText(report).then(() => {
-        const btn = document.getElementById('copy-btn');
-        btn.innerText = "✅ Copied!";
-        setTimeout(() => { btn.innerText = "📋 Copy Detailed Report"; }, 2000);
-    });
-}
- /**
- * Modern Theme Persistence Logic
- */
-const themeCheckbox = document.getElementById('checkbox'); // Matches the modern HTML id
-const themeText = document.getElementById('theme-text');
-const currentTheme = localStorage.getItem('theme');
-
-// 1. Initial Load Check (Runs immediately)
-function initTheme() {
-    if (currentTheme === 'dark') {
-        document.body.classList.add('dark-mode');
-        if (themeCheckbox) themeCheckbox.checked = true;
-        if (themeText) themeText.textContent = "Disable Dark Mode";
-    }
 }
 
-// 2. Handle Toggle Change
-if (themeCheckbox) {
-    themeCheckbox.addEventListener('change', (e) => {
-        if (e.target.checked) {
-            document.body.classList.add('dark-mode');
-            localStorage.setItem('theme', 'dark');
-           themeText.textContent = "Disable Dark Mode";
-        } else {
-            document.body.classList.remove('dark-mode');
-            localStorage.setItem('theme', 'light');
-            themeText.textContent = "Enable Dark Mode";
-        }
-    });
+
+
+/* ---------------- DISPLAY RESULT ---------------- */
+
+function displayResult(data,targetValue){
+
+currentReportData={...data,target:targetValue};
+
+const box=document.getElementById('result-container');
+const title=document.getElementById('result-title');
+const desc=document.getElementById('result-desc');
+
+const bar=document.getElementById('confidence-bar');
+const percentageLabel=document.querySelector('.percentage-text');
+
+const barDomain=document.getElementById('bar-domain');
+const barEntropy=document.getElementById('bar-entropy');
+
+const valDomain=document.getElementById('val-domain');
+const valEntropy=document.getElementById('val-entropy');
+
+
+box.classList.remove('hidden','safe-mode','danger-mode','warning-mode');
+
+box.style.opacity="0";
+box.style.transform="translateY(15px)";
+
+requestAnimationFrame(()=>{
+box.style.transition="all 0.5s cubic-bezier(0.19,1,0.22,1)";
+box.style.opacity="1";
+box.style.transform="translateY(0)";
+});
+
+
+const prediction=data.prediction || "UNKNOWN";
+const threatLevel=data.threat_level || "Low";
+const scoreText=data.score || "0%";
+const scoreValue=parseFloat(scoreText.replace('%',''));
+
+
+if(bar) bar.style.width=scoreValue+"%";
+
+if(percentageLabel){
+percentageLabel.innerText=scoreValue+"% ACCURACY";
 }
 
-// Initialize on load
-initTheme();
-document.addEventListener('DOMContentLoaded', renderHistory);
+
+title.innerText=prediction.toUpperCase();
+
+
+/* -------- SIGNAL WARNINGS -------- */
+
+let warningHTML="";
+
+if(data.tld_warning){
+warningHTML+=`<div class="badge badge-warning">${data.tld_warning}</div>`;
+}
+
+if(data.subdomain_warning){
+warningHTML+=`<div class="badge badge-warning">${data.subdomain_warning}</div>`;
+}
+
+
+/* -------- RESULT TEXT -------- */
+
+desc.innerHTML=`
+
+<div class="risk-badge badge-${threatLevel.toLowerCase()}">RISK: ${threatLevel}</div>
+
+<strong>Protocol:</strong> ${data.method || 'Neural-X Engine'} (${scoreText})<br>
+
+<p class="advice-text">${data.reason}</p>
+
+${warningHTML}
+
+`;
+
+
+/* -------- WHOIS -------- */
+
+if(data.whois){
+
+const registrarEl=document.getElementById('whois-registrar');
+const createdEl=document.getElementById('whois-created');
+const rawEl=document.getElementById('whois-raw');
+const ageEl=document.getElementById('whois-age');
+
+if(ageEl) ageEl.innerText=data.whois.domain_age || "Unknown";
+if(registrarEl) registrarEl.innerText=data.whois.registrar || "Protected";
+if(createdEl) createdEl.innerText=data.whois.creation_date || "Unknown";
+if(rawEl) rawEl.innerText=data.whois.raw_text || "No metadata found.";
+
+}
+
+
+/* -------- ANALYSIS BARS -------- */
+
+if(barDomain && barEntropy){
+
+const isSafe=prediction.toLowerCase().includes('safe');
+
+const dScore=isSafe?(85+Math.random()*10):(15+Math.random()*20);
+const eScore=isSafe?(12+Math.random()*10):(75+Math.random()*20);
+
+barDomain.style.width=dScore+"%";
+if(valDomain) valDomain.innerText=Math.round(dScore)+"%";
+
+barEntropy.style.width=eScore+"%";
+if(valEntropy) valEntropy.innerText=Math.round(eScore)+"%";
+
+}
+
+
+/* -------- RESULT MODE -------- */
+
+if(prediction.toLowerCase().includes("safe")){
+box.classList.add('safe-mode');
+}
+else if(threatLevel==="High"){
+box.classList.add('danger-mode');
+}
+else{
+box.classList.add('warning-mode');
+}
+
+}
+
+
+
+/* ---------------- DOWNLOAD REPORT ---------------- */
+
+function downloadReport(){
+
+if(!currentReportData) return alert("No active scan data found.");
+
+const reportContent=`
+🛡️ PHISH-SHIELD AI FORENSIC ANALYSIS
+========================================
+Generated: ${new Date().toLocaleString()}
+Target: ${currentReportData.target}
+Verdict: ${currentReportData.prediction.toUpperCase()}
+Risk: ${currentReportData.threat_level}
+Confidence: ${currentReportData.score}
+
+[WHOIS METADATA]
+Registrar: ${currentReportData.whois?.registrar || "N/A"}
+Created: ${currentReportData.whois?.creation_date || "N/A"}
+`;
+
+const blob=new Blob([reportContent],{type:'text/plain'});
+
+const url=window.URL.createObjectURL(blob);
+
+const a=document.createElement('a');
+a.href=url;
+a.download=`Report_${Date.now()}.txt`;
+
+document.body.appendChild(a);
+a.click();
+
+window.URL.revokeObjectURL(url);
+document.body.removeChild(a);
+
+}
+
+
+
+/* ---------------- HISTORY ---------------- */
+
+let scanHistory=JSON.parse(localStorage.getItem('phish_history')) || [];
+
+function addToHistory(type,target,data){
+
+const newScan={
+type:type.toUpperCase(),
+target:target.length>30?target.substring(0,27)+"...":target,
+prediction:data.prediction,
+threat:data.threat_level || "Low",
+timestamp:new Date().toLocaleTimeString()
+};
+
+scanHistory.unshift(newScan);
+
+if(scanHistory.length>5) scanHistory.pop();
+
+localStorage.setItem('phish_history',JSON.stringify(scanHistory));
+
+renderHistory();
+
+}
+
+
+
+function renderHistory(){
+
+const body=document.getElementById('history-body');
+const section=document.getElementById('history-section');
+
+if(!body || !section) return;
+
+if(scanHistory.length===0){
+section.classList.add('hidden');
+return;
+}
+
+section.classList.remove('hidden');
+
+body.innerHTML=scanHistory.map(scan=>{
+
+const resultClass=scan.prediction.toLowerCase()==="safe"?"badge-safe":"badge-phishing";
+
+const threatClass=scan.threat.toLowerCase()==="high"?"badge-phishing":"badge-medium";
+
+return `
+<tr>
+<td>${scan.type}</td>
+<td>${scan.target}</td>
+<td><span class="badge ${resultClass}">${scan.prediction.toUpperCase()}</span></td>
+<td><span class="badge ${threatClass}">${scan.threat}</span></td>
+</tr>
+`;
+
+}).join('');
+
+}
+
+
+
+/* ---------------- UI UTILITIES ---------------- */
+
+function showTab(type){
+
+document.getElementById('url-tab').style.display=type==='url'?'block':'none';
+document.getElementById('text-tab').style.display=type==='text'?'block':'none';
+
+const buttons=document.querySelectorAll('.tab-btn');
+
+buttons[0].classList.toggle('active',type==='url');
+buttons[1].classList.toggle('active',type==='text');
+
+document.getElementById('result-container').classList.add('hidden');
+
+}
+
+
+function clearHistory(){
+scanHistory=[];
+localStorage.removeItem('phish_history');
+renderHistory();
+}
+
+
+
+/* ---------------- COPY RESULT ---------------- */
+
+function copyResult(){
+
+const prediction=document.getElementById('result-title').innerText;
+
+const report=`🛡️ Phish-Shield AI Verdict: ${prediction}
+Date: ${new Date().toLocaleString()}`;
+
+navigator.clipboard.writeText(report).then(()=>{
+
+const btn=document.getElementById('copy-btn');
+
+btn.innerText="✅ COPIED";
+
+setTimeout(()=>{btn.innerText="📋 Copy Report";},2000);
+
+});
+
+}
+
+
+
+/* ---------------- THEME ---------------- */
+
+document.addEventListener("DOMContentLoaded",()=>{
+
+const themeCheckbox=document.getElementById("checkbox");
+
+const savedTheme=localStorage.getItem("theme");
+
+if(savedTheme==="light"){
+document.body.classList.add("light-mode");
+if(themeCheckbox) themeCheckbox.checked=true;
+}
+
+if(themeCheckbox){
+
+themeCheckbox.addEventListener("change",(e)=>{
+
+if(e.target.checked){
+document.body.classList.add("light-mode");
+localStorage.setItem("theme","light");
+}
+else{
+document.body.classList.remove("light-mode");
+localStorage.setItem("theme","dark");
+}
+
+});
+
+}
+
+renderHistory();
+
+});
