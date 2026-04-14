@@ -137,6 +137,11 @@ animationDelay
 if (!response.ok) throw new Error("Backend Offline");
 
 const data = await response.json();
+/* store latest scan result for chatbot */
+localStorage.setItem(
+    "latestScan",
+    JSON.stringify(data)
+);
 
 clearInterval(stepInterval);
 
@@ -176,6 +181,96 @@ input.readOnly=false;
 
 }
 
+/* ---------------- TEXT SCANNER ---------------- */
+
+async function scanText() {
+
+const textInput = document.getElementById('text-input').value.trim();
+const radar = document.getElementById('scanning-radar');
+const resultBox = document.getElementById('result-container');
+const dynamicStatus = document.getElementById('dynamic-status');
+const btn = document.getElementById('text-btn');
+
+if (!textInput || textInput.length < 3) {
+alert("❌ Please enter valid message text.");
+return;
+}
+
+btn.disabled = true;
+resultBox.classList.add('hidden');
+radar.classList.remove('hidden');
+
+const scanSteps = [
+"📝 Reading Message Content...",
+"🧠 NLP Engine Processing...",
+"🔍 Detecting Social Engineering...",
+"📊 Calculating Threat Score..."
+];
+
+startScanAnimation(scanSteps);
+
+let step = 0;
+
+const stepInterval = setInterval(() => {
+
+const stepEl = document.getElementById("scan-step-" + step);
+
+if (stepEl) {
+stepEl.classList.add("active");
+dynamicStatus.innerText = scanSteps[step];
+}
+
+step++;
+
+if (step >= scanSteps.length) {
+clearInterval(stepInterval);
+}
+
+}, 700);
+
+try {
+
+const response = await fetch(`${API_BASE}/predict/text`, {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify({ text: textInput })
+});
+
+if (!response.ok) throw new Error("Backend Error");
+
+const data = await response.json();
+
+clearInterval(stepInterval);
+
+setTimeout(() => {
+
+const steps = document.querySelector(".scan-steps");
+if (steps) steps.remove();
+
+radar.classList.add('hidden');
+
+displayResult(data, textInput);
+addToHistory("TEXT", textInput, data);
+
+}, 700);
+
+}
+catch(error) {
+
+clearInterval(stepInterval);
+
+alert("⚠️ Text Analyzer Error");
+
+radar.classList.add('hidden');
+
+}
+finally {
+
+btn.disabled = false;
+
+}
+
+}
 
 
 /* ---------------- DISPLAY RESULT ---------------- */

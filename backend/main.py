@@ -6,6 +6,9 @@ import joblib
 import sys
 import whois
 import re
+from chatbot import ask_security_bot
+from pydantic import BaseModel 
+from typing import Optional
 from datetime import datetime, UTC
 from fastapi import FastAPI
 from pydantic import BaseModel
@@ -36,8 +39,9 @@ url_engine = PhishShieldInference(
 # ---------------- INPUT MODELS ----------------
 class URLInput(BaseModel):
     url: str
-
-
+class ChatInput(BaseModel):
+    message: str
+    scan_context: Optional[dict] = None
 class TextInput(BaseModel):
     text: str
 
@@ -261,36 +265,48 @@ async def predict_url(data: URLInput):
 # ---------------- TEXT ANALYZER ----------------
 @app.post("/predict/text")
 async def predict_text(data: TextInput):
-
     try:
+        user_text = data.text.strip()
 
-        prediction = text_model.predict([data.text])[0]
-        prob = text_model.predict_proba([data.text])[0]
+        if not user_text:
+            return {
+                "prediction": "Error",
+                "reason": "Empty input text"
+            }
 
-        confidence = round(np.max(prob) * 100, 2)
+        prediction = text_model.predict([user_text])[0]
+
+        if hasattr(text_model, "predict_proba"):
+            prob = text_model.predict_proba([user_text])[0]
+            confidence = round(np.max(prob) * 100, 2)
+        else:
+            confidence = 85.0
 
         is_phish = prediction == 1
-
         level, advice = get_threat_metadata(confidence, is_phish)
 
-        verdict = "phishing" if is_phish else "safe"
-
         return {
-            "prediction": verdict,
+            "prediction": "phishing" if is_phish else "safe",
             "score": f"{confidence}%",
             "threat_level": level,
-            "method": "🧠 NLP Neural Engine",
+            "method": "🧠 NLP Engine",
             "reason": advice
         }
 
-    except Exception:
-
+    except Exception as e:
         return {
             "prediction": "Error",
-            "reason": "⚠️ NLP Engine error"
+            "reason": str(e)
         }
-
-
+#----------------- CHATBOT ----------------
+@app.post("/chat")
+async def chat_ai(data: ChatInput):
+    try:
+        reply = ask_security_bot(data.message,data.scan_context)
+        return {"reply": reply}
+    except Exception as e:
+        print("CHATBOT ERROR:", e)
+        return {"reply": f"⚠️ Backend error: {str(e)}"}
 # ---------------- CORS ----------------
 app.add_middleware(
     CORSMiddleware,

@@ -125,17 +125,32 @@
     <footer class="footer">
         <p>&copy; 2026 PhishShield AI | Enterprise Cybersecurity Portfolio Project</p>
     </footer>
-    <div class="theme-switch-wrapper">
-    <label class="theme-switch" for="checkbox">
-        <input type="checkbox" id="checkbox" />
-        <div class="slider round">
-            <span class="icon sun">☀️</span>
-            <span class="icon moon">🌙</span>
-        </div>
-    </label>
-    <em id="theme-text">Enable Dark Mode</em>
+    <!-- chatbot -->
+     <div id="chat-toggle">🛡</div>
+
+<!-- Chat Box -->
+<!-- CHAT TOGGLE -->
+<div id="chat-toggle" onclick="toggleChat()">🛡</div>
+<!-- CHAT WINDOW -->
+<div id="chat-box">
+    
+    <div class="chat-header">
+        <span>PhishShield Copilot</span>
+        <span class="chat-close" onclick="toggleChat()">✖</span>
+    </div>
+
+    <div id="chat-messages">
+        <div class="bot-msg">👋 Hello. Ask me any cybersecurity question.</div>
+    </div>
+
+    <div class="chat-input-area">
+        <input type="text" id="chat-input" placeholder="Type here...">
+        <button onclick="sendChat()">Send</button>
+    </div>
+
 </div>
     <script src="js/script.js"></script>
+    <script src="js/chatbot.js"></script>
     <script src="js/news.js"></script>
 </body>
 </html>
