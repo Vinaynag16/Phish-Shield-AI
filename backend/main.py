@@ -13,6 +13,7 @@ from datetime import datetime, UTC
 from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
+from database import init_db, log_scan, get_stats
 
 # --- IMPORT LSTM ENGINE ---
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -21,9 +22,10 @@ from models1.predict import PhishShieldInference
 
 # ---------------- CONFIG ----------------
 app = FastAPI(title="Phish-Shield AI Engine v2.0")
-
-BASE_DIR = r"C:\Users\nagav\Desktop\phishing project"
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))     # backend folder
+BASE_DIR = os.path.dirname(CURRENT_DIR)
 MODEL_DIR = os.path.join(BASE_DIR, "models")
+MODEL1_DIR = os.path.join(BASE_DIR, "models1")
 WHITELIST_PATH = os.path.join(BASE_DIR, "backend", "whitelist.txt")
 
 
@@ -31,9 +33,12 @@ WHITELIST_PATH = os.path.join(BASE_DIR, "backend", "whitelist.txt")
 text_model = joblib.load(os.path.join(MODEL_DIR, "text_model.pkl"))
 
 url_engine = PhishShieldInference(
-    model_path=os.path.join(BASE_DIR, "models1", "phishshield_lstm.h5"),
-    tokenizer_path=os.path.join(BASE_DIR, "models1", "url_tokenizer.pkl")
+    model_path=os.path.join(MODEL1_DIR, "phishshield_lstm.h5"),
+    tokenizer_path=os.path.join(MODEL1_DIR, "url_tokenizer.pkl")
 )
+
+# ---------------- DATABASE ----------------
+init_db()
 
 
 # ---------------- INPUT MODELS ----------------
@@ -60,9 +65,23 @@ def is_whitelisted(url):
         ext = tldextract.extract(url)
         domain = f"{ext.domain}.{ext.suffix}"
 
-        with open(WHITELIST_PATH, "r") as f:
-            whitelist = [line.strip().lower() for line in f if line.strip()]
+        whitelist = []
+        skipped = 0
 
+        with open(WHITELIST_PATH, "r") as f:
+            for line_num, line in enumerate(f, 1):
+                line = line.strip()
+                if not line:
+                    skipped += 1
+                    continue
+                parts = line.split(",", 1)
+                if len(parts) == 2:
+                    whitelist.append(parts[1].lower())
+                else:
+                    skipped += 1
+                    print(f"WHITELIST WARN: line {line_num} malformed ({len(parts)} fields): {line[:80]}")
+
+        print(f"Whitelist loaded: {len(whitelist)} domains, skipped {skipped} malformed lines")
         return domain in whitelist
 
     except Exception as e:
@@ -236,10 +255,7 @@ async def predict_url(data: URLInput):
 
         result = url_engine.predict_url(url_to_test)
 
-        is_phish = (
-            result["status"] == "PHISHING"
-            or float(result["confidence"].replace("%", "")) > 45
-        )
+        is_phish = result["status"] == "PHISHING"
 
     level, advice = get_threat_metadata(result["confidence"], is_phish)
 
@@ -249,6 +265,9 @@ async def predict_url(data: URLInput):
     if suspicious_tld(url_to_test):
         print("⚠️ Suspicious TLD detected")
         tld_flag = "⚠️ Suspicious TLD detected"
+
+    prediction_str = result["status"].lower()
+    log_scan("url", url_to_test, prediction_str, level, result["confidence"])
 
     return {
         "prediction": result["status"].lower(),
@@ -285,6 +304,9 @@ async def predict_text(data: TextInput):
         is_phish = prediction == 1
         level, advice = get_threat_metadata(confidence, is_phish)
 
+        pred_str = "phishing" if is_phish else "safe"
+        log_scan("text", user_text[:200], pred_str, level, f"{confidence}%")
+
         return {
             "prediction": "phishing" if is_phish else "safe",
             "score": f"{confidence}%",
@@ -307,6 +329,14 @@ async def chat_ai(data: ChatInput):
     except Exception as e:
         print("CHATBOT ERROR:", e)
         return {"reply": f"⚠️ Backend error: {str(e)}"}
+
+
+# ---------------- STATS ----------------
+@app.get("/stats")
+async def stats():
+    return get_stats()
+
+
 # ---------------- CORS ----------------
 app.add_middleware(
     CORSMiddleware,

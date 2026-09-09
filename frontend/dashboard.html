@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhishShield AI | Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-left">
+            <h2 class="logo">🛡️ PHISH-SHIELD-AI v2.0</h2>
+        </div>
+        <div class="nav-right">
+            <label class="theme-switch">
+                <input type="checkbox" id="checkbox">
+                <span class="slider"></span>
+            </label>
+            <span class="theme-text">Dark Mode</span>
+            <a href="index.html">Home</a>
+            <a href="scanner.html">Scanner</a>
+            <a href="dashboard.html" class="active">Dashboard</a>
+            <a href="features.html">Features</a>
+            <a href="docs.html">Docs</a>
+        </div>
+    </nav>
+
+    <div class="main-wrapper">
+        <div class="container">
+
+            <header class="scanner-header">
+                <div class="scanner-title">
+                    <i class="fas fa-chart-line"></i>
+                    <h1>Analytics <span class="ai-tag">Dashboard</span></h1>
+                    <span class="scanner-subtitle">Real-time scan metrics and threat intelligence</span>
+                </div>
+            </header>
+
+            <div id="loading-state" class="stat-card" style="text-align:center;padding:40px;">
+                <i class="fas fa-spinner fa-spin" style="font-size:2rem;color:var(--accent);"></i>
+                <p style="margin-top:12px;color:var(--muted);">Loading analytics...</p>
+            </div>
+
+            <div id="empty-state" class="stat-card" style="display:none;text-align:center;padding:60px;">
+                <i class="fas fa-inbox" style="font-size:3rem;color:var(--muted);opacity:0.4;"></i>
+                <h3 style="margin-top:16px;color:var(--muted);">No scans yet</h3>
+                <p style="color:var(--muted);margin-top:8px;">Run some scans in the <a href="scanner.html" style="color:var(--accent);">Scanner</a> to see analytics here.</p>
+            </div>
+
+            <div id="dashboard-content" style="display:none;">
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <i class="fas fa-search"></i>
+                        <h3 id="total-scans">0</h3>
+                        <p>Total Scans</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h3 id="detection-rate">0%</h3>
+                        <p>Detection Rate</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-chart-pie"></i>
+                        <h3 id="threat-count">0</h3>
+                        <p>Threat Levels</p>
+                    </div>
+                </div>
+
+                <div class="analysis-details" style="margin-top:24px;">
+                    <h4><i class="fas fa-chart-area"></i> Scans Per Day (Last 30 Days)</h4>
+                    <div style="position:relative;height:300px;">
+                        <canvas id="scans-per-day-chart"></canvas>
+                    </div>
+                </div>
+
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:24px;">
+                    <div class="analysis-details">
+                        <h4><i class="fas fa-chart-pie"></i> Threat Distribution</h4>
+                        <div style="position:relative;height:300px;">
+                            <canvas id="threat-pie-chart"></canvas>
+                        </div>
+                    </div>
+                    <div class="analysis-details">
+                        <h4><i class="fas fa-chart-bar"></i> Top Flagged Domains</h4>
+                        <div style="position:relative;height:300px;">
+                            <canvas id="top-domains-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="history-container" style="margin-top:24px;">
+                    <hr class="divider">
+                    <div class="section-header">
+                        <h2>📋 Recent <span class="text-gradient">Scan Activity</span></h2>
+                    </div>
+                    <table id="history-table">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Target</th>
+                                <th>Result</th>
+                                <th>Threat</th>
+                                <th>Score</th>
+                                <th>Time</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dashboard-history-body"></tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <script src="js/dashboard.js"></script>
+</body>
+</html>
