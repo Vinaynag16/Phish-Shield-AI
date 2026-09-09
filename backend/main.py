@@ -128,13 +128,18 @@ def check_typosquatting(url):
 
     brands = [
         "google", "paypal", "amazon",
-        "apple", "microsoft", "onedrive", "live"
+        "apple", "microsoft", "onedrive"
     ]
 
     if normalized in brands and domain not in brands:
         return True
 
-    if "-" in domain and any(b in domain for b in brands):
+    domain_tokens = re.split(r"[-.]", domain)
+    if "-" in domain and any(b in domain_tokens for b in brands):
+        return True
+
+    domain_no_hyphens = domain.replace("-", "")
+    if any(b in domain_no_hyphens for b in brands):
         return True
 
     return False
